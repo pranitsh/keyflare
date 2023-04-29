@@ -475,6 +475,15 @@ class identifier:
         listener.stop()
 
 def main():
+    """
+    Entry point for the script. Starts a keyboard listener that calls the class identifier() when the keyboard combination Shift + A + Z is pressed. An alternative method to exit the script is to press Ctrl + C on Windows or Ctrl + Z on Ubuntu.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     identifier(x=system(fast=False))
     start_combination = [
         {keyboard.Key.shift, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
