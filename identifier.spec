@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['aikeyboard/identifier.py'],
+    ['aikeyboard\\identifier.py'],
     pathex=[],
     binaries=[],
     datas=[],
