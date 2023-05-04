@@ -1,23 +1,32 @@
-KeyFlare
-About
+# KeyFlare
+## About
 KeyFlare v0.1.0 is a useful tool that enables users to interactively control their mouse using their keyboard. KeyFlare can provide an expanded user experience for those who prefer to use a keyboard over a mouse.
-Features:
-Intuitive keyboard-based mouse control: KeyFlare shows a list of coordinates representing UI elements on your screen that you can click on by typing the unique alphabetical identifier for a coordinate of interest
-Users can easily access this list of coordinates by typing shift+A+Z.
-Users can conveniently exit the application by typing shift, control, or any non-shown key on the displayed image.
-Users can also exit the application by deleting the terminal shown that represents the running python-based application.
-Installation
+### Features:
+- Intuitive keyboard-based mouse control: KeyFlare shows a list of coordinates representing UI elements on your screen that you can click on by typing the unique alphabetical identifier for a coordinate of interest
+- Users can easily access this list of coordinates by typing shift+A+Z.
+- Users can conveniently exit the application by typing shift, control, or any non-shown key on the displayed image.
+- Users can fully exit the application by deleting the terminal shown that represents the running python-based application.
+## Installation
 For Window users:
-Download the binary at KeyFlare
+
+1. Download [tesseract-ocr](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.3.1.20230401.exe) executable.
+1. Download the [KeyFlare](https://github.com/Pshah2023/keyflare/releases/download/v0.1.0/main.exe) binary 
+
 For linux and macOS users:
- Download python with tkinter (aka tk)
- Download poetry and add it to your path
- Download tesseract through your terminal package manager (apt for Ubuntu, brew for macOS, and so on)
- Update the keyflare/keyflare/main.py with the location of your tesseract installation (find it with which tesseract by changing this variable).
- pytesseract.pytesseract.tesseract_cmd = r'C:\\\Program Files\\\Tesseract-OCR\\\tesseract.exe
- Run it: poetry run python keyflare/main.py
-I hope that KeyFlare may one day become an 
-Documentation
+Linux and macOS users can compile from source since each setup has different requirements. If you have any difficulties installing KeyFlare, please contact me or write an issue.
+1. Download [python](https://www.python.org/downloads/release/python-3106/) with tkinter (aka tk or tcl)
+2. Download [poetry](https://python-poetry.org/docs/) and add it to your path
+3. Download tesseract through your default terminal package manager
+  - Linux: preferably ```sudo apt install tesseract-ocr; sudo apt install libtesseract-dev``` ([alternatives](https://tesseract-ocr.github.io/tessdoc/Installation.html))
+  - macOS: preferably *[brew](https://brew.sh/) install tesseract* (alternatively: *sudo [port](https://www.macports.org/) install tesseract*)
+4. Update `/path/to/keyflare/keyflare/main.py` with the location of your tesseract installation
+  - Linux: If you installed with `apt`, it should be `/usr/bin/tesseract`
+  - macOS: Find your tesseract installation path in terminal by typing `which tesseract` ([alternatives](https://apple.stackexchange.com/questions/73965/why-which-command-does-not-give-you-the-correct-path) if this does not work)
+  - All Users: Change the line ```pytesseract.pytesseract.tesseract_cmd = r'C:\\\Program Files\\\Tesseract-OCR\\\tesseract.exe``` to ```pytesseract.pytesseract.tesseract_cmd = '/path/to/installation'"```
+5. In the keyflare directory (i.e. `/path/to/keyflare`), run ```poetry install``` (to install dependencies) and then ```poetry run python keyflare/main.py``` (to run KeyFlare)
+
+*I hope that KeyFlare may one day become an integral part of your workflow.*
+## Documentation
 Help on module main:
 
 NAME
