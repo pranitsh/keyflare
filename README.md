@@ -10,7 +10,7 @@ KeyFlare v0.1.0 is a useful tool that enables users to interactively control the
 ### For Window users:
 
 1. Download [tesseract-ocr](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.3.1.20230401.exe) executable.
-1. Download the [KeyFlare](https://github.com/Pshah2023/keyflare/releases/download/v0.1.0/main.exe) binary. Although I am an unverified developer, you can ignore those warnings. I plan to solve this problem in the future.
+2. Download the [KeyFlare](https://github.com/Pshah2023/keyflare/releases/download/v0.1.0/main.exe) binary. Although I am an unverified developer, you can ignore those warnings. I plan to solve this problem in the future.
 
 ### For linux and macOS users:
 Linux and macOS users can compile from source since each setup has different requirements. If you have any difficulties installing KeyFlare, please contact me or write an issue.
@@ -26,7 +26,8 @@ Linux and macOS users can compile from source since each setup has different req
   - All Users: Change the line ```pytesseract.pytesseract.tesseract_cmd = r'C:\\\Program Files\\\Tesseract-OCR\\\tesseract.exe``` to ```pytesseract.pytesseract.tesseract_cmd = '/path/to/installation'"```
 6. In the keyflare directory (i.e. `/path/to/keyflare`), run ```poetry install``` (to install dependencies) and then ```poetry run python keyflare/main.py``` (to run KeyFlare)
 
-*I hope that KeyFlare may one day become an integral part of your workflow.*
+*I hope that KeyFlare may one day become an integral part of your workflow.* Thank you for your support! I look forward to your feedback and suggestions for future improvements. **<ins>Please share your feedback [here](https://forms.gle/dCxMQLN7YuAyHD2B8).**
+
 ## Documentation
 Help on module main:
 
