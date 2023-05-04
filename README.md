@@ -7,12 +7,12 @@ KeyFlare v0.1.0 is a useful tool that enables users to interactively control the
 - Users can conveniently exit the application by typing shift, control, or any non-shown key on the displayed image.
 - Users can fully exit the application by deleting the terminal shown that represents the running python-based application.
 ## Installation
-For Window users:
+### For Window users:
 
 1. Download [tesseract-ocr](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.3.1.20230401.exe) executable.
 1. Download the [KeyFlare](https://github.com/Pshah2023/keyflare/releases/download/v0.1.0/main.exe) binary 
 
-For linux and macOS users:
+### For linux and macOS users:
 Linux and macOS users can compile from source since each setup has different requirements. If you have any difficulties installing KeyFlare, please contact me or write an issue.
 1. Download [python](https://www.python.org/downloads/release/python-3106/) with tkinter (aka tk or tcl)
 2. Download [poetry](https://python-poetry.org/docs/) and add it to your path
