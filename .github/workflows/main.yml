@@ -74,9 +74,22 @@ jobs:
         with:
           path: dist/
 
+      - name: Get current ref and commit message
+        id: current_ref
+        uses: jwalton/gh-find-current-ref@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create tag from commit message
+        run: |
+          TAG_NAME="v$(echo '${{ steps.current_ref.outputs.commitMessage }}' | grep -oP '(\d+\.)+\d+')"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+        if: startsWith(steps.current_ref.outputs.commitMessage, 'Release')
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.TAG_NAME }}
           files: "dist/*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
