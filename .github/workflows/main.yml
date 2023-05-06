@@ -29,13 +29,54 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run build script on Linux and macOS
-        if: matrix.os != 'windows-latest'
-        run: |
           pip install pyinstaller
+      - name: Run build script on Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
           pyinstaller --onefile --noconsole keyflare/main.py
       - name: Run build script on Windows
         if: matrix.os == 'windows-latest'
         run: |
-          pip install pyinstaller
           pyinstaller --onefile --noconsole --windowed keyflare/main.py
+      - name: Run build script on macOS
+        if: matrix.os == 'macOS-latest'
+        run: |
+          pyinstaller --onefile --noconsole --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/main.py
+      - name: Upload artifacts for Linux
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: keyflare-${{ matrix.os }}
+          path: dist/main
+      - name: Upload artifacts for Windows
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: keyflare-${{ matrix.os }}
+          path: dist/main
+      - name: Upload artifacts for macOS
+        if: matrix.os == 'macOS-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: keyflare-${{ matrix.os }}
+          path: dist/main.app
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: dist/
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "dist/*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
