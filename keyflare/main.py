@@ -1,25 +1,18 @@
-#!/usr/bin/env poetry run python3
+#!/usr/bin/env python3
 import tkinter as tk
+from tkinter import ttk
+import tkinter.colorchooser as cc
+from ttkthemes import ThemedStyle
 from pynput import keyboard
-import time
 import numpy as np
-import pytesseract
-import re
 import pyautogui
-import cv2
 import time
-from PIL import Image, ImageTk
-import string
+import cv2
 from rtree import index
-import glob
 import pathlib
-import pyautogui
-import PIL
+import sys
+import tempfile
 import os
-import urllib.request
-from sys import exit
-
-pytesseract.pytesseract.tesseract_cmd = r'C:\\\Program Files\\\Tesseract-OCR\\\tesseract.exe'
 
 class system:
     """
@@ -29,132 +22,41 @@ class system:
         generalPath (str): The main path of the project.
         paths (dict): A dictionary containing paths of files and directories.
         directories (dict): A dictionary containing directories.
-        folders (dict): A dictionary containing file extensions for different series folders.
 
     Methods:
         __init__: Initializes the class instance.
         pathways(mainPath=None, files=True): Generates a nested structure representing directories and files in a given path.
-        series(series, new=True, file=True): Helps to manage a number-based series of files within a specified directory.
         image(show=False): Takes a screenshot of the current screen and returns it as a PIL image.
         mouse(dataPoint): Moves the mouse pointer to a specified location of an element and then clicks it.
     """
 
     generalPath = ""
-    folders = {"logs": ".log", "learning": ".toml", "data": ".pkl", "training": ".h5", "history": ".p", "highlights": ".toml",
-               "photos": ".png", "reviews": ".yaml", "docs": ".md", "tasks": ".toml", "readable": ".toml", "tests": ".py",
-               "logsnext": "", "src": ".py", "screenshots": ".png"}
+    color = (248, 93, 94)
 
-    def __init__(self, fast=True):
+    def __init__(self):
         """
         Initializes the class instance.
 
         Args:
-            fast (bool): A boolean value indicating whether to use fast processing mode. Default is False.
+            None.
 
         Returns:
             None.
         """
         self.generalPath = pathlib.Path(
             __file__).parent.parent.resolve().as_posix()
-        if fast == False:
-            self.check()
-            print("[system] Initiated.")
 
-    def check(self):
-        url = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-        urllib.request.urlretrieve(url, self.series("screenshots"))
-        img = Image.open(self.series("screenshots", new=False)[-1])
-        try:
-            text = pytesseract.image_to_string(img, lang = 'eng')
-            print("[system] If the following text reads google, everything has been tested:", text)
-        except pytesseract.TesseractNotFoundError:
-            print("[system] Unable to run pytesseract, please download tesseract at https://github.com/UB-Mannheim/tesseract/wiki")
-            print("[system] Make sure to install it in the default location: C:\\Program Files\\Tesseract-OCR")
-            print("[system] Exiting in 20 seconds")
-            time.sleep(20)
-            exit()
-        
-    def series(self, series, new=True, file=True):
-        """
-        Helps to manage a number-based series of files within a specified directory.
-
-        Args:
-            series (str): The name of the series folder.
-            new (bool, optional): If True, creates a new file or folder. If False, retrieves existing file versions. Defaults to True.
-            file (bool, optional): If True, creates a file. If False, creates a folder. Defaults to True.
-
-        Returns:
-            Union[str, List[str]]: If new is True, returns the full path to the newly created file or folder. If new is False, returns a list of full paths to existing files in the series.
-        """
-        folderPath = ""
-        extension = ""
-        try:
-            extension = self.folders[series]
-        except KeyError:
-            extension = input(
-                f"[system] {series} should use what extension: ")
-            if "." not in extension:
-                extension = "." + extension
-        
-        folderPath = pathlib.Path(self.generalPath, series)
-        folderPath.mkdir(parents=True, exist_ok=True)
-        folderPath = folderPath.as_posix()
-        
-        allFiles = dict()
-        useDict = False
-        for file in os.listdir(folderPath):
-            file = str(file)
-            if "." in file:
-                try:
-                    file = file.split(".")[0]
-                    allFiles[int(file)] = folderPath + \
-                        "/" + file + extension
-                except ValueError:
-                    useDict = True
-                    file = file.split(".")[0]
-                    allFiles[file] = folderPath + \
-                        "/" + file + extension
-        allFiles = list(allFiles.values())
-        allFiles.sort(key=os.path.getmtime)
-        if new == False:
-            if len(allFiles) == 0:
-                fileName = "0" + extension
-                fullPath = f"{folderPath}/{fileName}"
-                pathlib.Path(fullPath).touch()
-                allFiles.append(fullPath)
-            return allFiles
-        elif new == True:
-            fileName = str(len(allFiles)) + extension
-            fullPath = f"{folderPath}/{fileName}"
-            if file:
-                pathlib.Path(fullPath).touch()
-            elif file == False:
-                pathlib.Path(fullPath).mkdir()
-            return fullPath
-    
-    def image(self, show=False):
+    def image(self):
         """
         Takes a screenshot of the current screen and returns it as a PIL image.
 
-        Args:
-            show (str, optional): If specified, opens the image at the specified file path instead of taking a screenshot. Defaults to False.
-
         Returns:
             tuple: A tuple containing first the file path and then the Pillow image.
-
-        Notes:
-            To use pyautogui on Linux, run ```sudo apt-get install scrot```.
         """
-        if show == False:
-            image_path = self.series("screenshots", new=True)
-            screenshot = pyautogui.screenshot()
-            screenshot.save(image_path)
-            return (image_path, PIL.Image.open(image_path))
-        if show != False:
-            im = PIL.Image.open(show)
-            im.show()
+        screenshot = pyautogui.screenshot()
+        return np.array(screenshot)
 
-    def mouse(self, dataPoint):
+    def mouse(self, dataPoint, clicks):
         """
         Moves the mouse pointer to a specified location of an element and then clicks it..
 
@@ -168,9 +70,9 @@ class system:
             The method uses the PyAutoGUI library to move the mouse pointer. The coordinates of the mouse pointer are scaled based on the current screen resolution.
         """
         pyautogui.moveTo(dataPoint[0], dataPoint[1])
-        pyautogui.click()
+        pyautogui.click(clicks=clicks)
 
-class identifier:
+class pipeline:
     """
     A class to identify and select items on the screen.
 
@@ -189,16 +91,16 @@ class identifier:
     Example:
         >>> identifier()
     """
-    image_path = None
     processed_image = None
-    converted_image = None
     original_image = None
-    collecting_data = list()
-    coordinate_data = dict()
+    contours = None
+    coordinate_data = list()
     selected_coordinate = None
     x = system()
+    exit_flag = False
 
-    def __init__(self, x=None):
+
+    def __init__(self):
         """
         The `Identifier` class' initializer.
 
@@ -211,18 +113,20 @@ class identifier:
         Notes:
             Initializes the `Identifier` class and its methods. This initializer automatically performs the usage pipeline.
         """
-        if x != None:
-            self.x = x
-        self.image_path, self.original_image = self.x.image()
+    
+    def run(self, clicks=1):
+        self.contours = list()
+        self.original_image = None
+        self.processed_image = None
+        self.coordinate_data = list()
+        self.exit_flag = False
+        self.selected_coordinate = None
+        self.original_image = self.x.image()
         self.processing_image()
         self.collecting_data()
         self.processing_data()
-        self.selecting_coordinate()
-        if self.selected_coordinate != None:
-            time.sleep(0.2)
-            self.x.mouse([self.selected_coordinate[0]+5, self.selected_coordinate[1]+5])
-        else:
-            print("[identifier] Manually cancelled.")
+        self.exit_flag = self.selecting_coordinate(clicks=clicks)
+
 
     def processing_image(self):
         """
@@ -240,11 +144,18 @@ class identifier:
         Notes:
             The processed image is stored in the `self.processed_image` variable, and the original image is converted to RGB format and stored in the `self.original_image` variable. The `self.converted_image` variable stores a copy of the converted image as a numpy array. 
         """
-        self.original_image = self.original_image.convert("RGB")
-        cvImage = np.array(self.original_image)
-        self.converted_image = cvImage[:, :, ::-1].copy()
-        gray = cv2.cvtColor(self.converted_image, cv2.COLOR_RGB2GRAY)
-        self.processed_image = gray
+        image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
+        allContours = []
+        for i in range(1, 8):
+            thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+            kernel = np.ones((1, i), np.uint8)
+            dilated = cv2.dilate(thresh, kernel, iterations=1)
+            contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if len(contours) < 525:
+                allContours.append(contours)
+                self.contours = max(allContours, key=len)
+            if len(self.contours) > 300:
+                break
         
     def collecting_data(self):
         """
@@ -267,22 +178,11 @@ class identifier:
         The data follows the format [ 0 'level', 1 'page_num', 2 'block_num', 3 'par_num', 4 'line_num', 5 'word_num', 6 'left', 7 'top', 8 'width', 9 'height', 10 'conf', 11 'text']
 
         """
-        unprocessedData = pytesseract.image_to_data(
-            self.processed_image, lang='eng')
-        data = []
-        for thing in re.split("\n", unprocessedData):
-            subList = []
-            for item in re.split("\t", thing):
-                try:
-                    item = int(item)
-                    subList.append(item)
-                except ValueError:
-                    subList.append(item)
-            if len(subList) >= 12:
-                data.append(
-                    [subList[6], subList[7], subList[6]+subList[8], subList[7]+subList[9], subList[10], subList[11]])
-        self.collecting_data = data[1:]
+        for cnt in self.contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            self.coordinate_data.append([x, y, x + w, y + h])
 
+    
     def processing_data(self):
         """
         Filters a list of text data chunks based on their properties into coordinate data.
@@ -299,12 +199,9 @@ class identifier:
         Notes:
             The `self.data` variable must be set to a list of data chunks before calling this method. Each data point should follow the format [left, top, width, height, confidence, and extracted text]. This method filters the data points based on their bounding boxes using the intersection over union (IoU) method. The `self.data` variable is updated to contain the filtered list. The `self.coordinate_data` variable is also updated to contain a dictionary that maps each chunk's left and top coordinates to a unique alphabet string identifier.
         """
-        items = list()
-        rt = index.Index()
-
         def intersection_over_union(data_point_1, data_point_2):
-            p1x1, p1y2, p1x2, p1y2, _, _ = data_point_1
-            p2x1, p2y1, p2x2, p2y2, _, _ = data_point_2
+            p1x1, p1y2, p1x2, p1y2 = data_point_1
+            p2x1, p2y1, p2x2, p2y2 = data_point_2
             xInter1 = max(p1x1, p2x1)
             yInter1 = max(p1y2, p2y1)
             xInter2 = min(p1x1 + p1x2, p2x1 + p2x2)
@@ -313,7 +210,6 @@ class identifier:
                 max(0, yInter2 - yInter1)
             area1 = p1x2 * p1y2
             area2 = p2x2 * p2y2
-            # union_area = area1 + area2 - inter_area
             return [interArea, area1, area2]
 
         def remove_intersecting_boxes(data_points):
@@ -334,7 +230,7 @@ class identifier:
                         if i != j:
                             interArea, area1, area2 = intersection_over_union(
                                 data_points[i], data_points[j])
-                            if interArea > 1:
+                            if interArea > 50:
                                 if area1 > area2:
                                     boxes_to_remove.add(i)
             for i in boxes_to_remove:
@@ -345,11 +241,11 @@ class identifier:
             for item in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
                 allItems.append(data_points[item])
             return allItems
-            items = remove_intersecting_boxes(self.collecting_data)
-            self.collecting_data = items
+        
+        self.coordinate_data = remove_intersecting_boxes(self.coordinate_data)
 
-
-        def generate_alphabet_strings(length, current_string="", alphabet=string.ascii_lowercase):
+        
+        def generate_alphabet_strings(length, current_string="", alphabet="etaoinsrhlcdumfpwybgvkxjq"):
             if length == 1:
                 for letter in alphabet:
                     yield current_string + letter
@@ -357,9 +253,9 @@ class identifier:
                 for letter in alphabet:
                     yield from generate_alphabet_strings(length - 1, current_string + letter, alphabet)
 
-        def map_list_to_alphabet_strings(items):
+        def list_aphabet_strings(items):
             num_items = len(items)
-            alphabet_length = len(string.ascii_lowercase)
+            alphabet_length = 25
             string_length = 1
 
             while alphabet_length ** string_length < num_items:
@@ -368,13 +264,13 @@ class identifier:
             alphabet_strings = list(generate_alphabet_strings(string_length))[
                 : num_items]
 
-            return {alphabet_string: item for alphabet_string, item in zip(alphabet_strings, items)}
+            return list(zip(alphabet_strings, items))
 
-        toMap = [(item[0], item[1]) for item in self.collecting_data]
-        self.coordinate_data = map_list_to_alphabet_strings(toMap)
+        toMap = [(item[0], item[1]) for item in self.coordinate_data]
+        self.coordinate_data = list_aphabet_strings(toMap)
 
 
-    def selecting_coordinate(self):
+    def selecting_coordinate(self, clicks):
         """
         Allows the user to select a coordinate location from the regions of interest.
 
@@ -390,9 +286,9 @@ class identifier:
         Notes:
             This method displays the input image on a tkinter canvas with keyboard controls enabled. The user can enter a letter to filter the displayed text chunks by their first letter. Pressing the letter corresponding to the desired text chunk's first letter selects that chunk's coordinate location as the "selected_coordinate" variable. The selected coordinate is stored as a tuple in the format (x, y).
         """
-        keys = list(self.coordinate_data.keys())
+        keys = [full_input_identifier for full_input_identifier, _ in self.coordinate_data]
         length = len(keys[0])
-        key_buffer = [""]
+        key_buffer = []
 
         def on_press(key):
             try:
@@ -406,73 +302,92 @@ class identifier:
         def edited_image(listed_data, image, root):
             "key should be a string, location should be in the format (x, y)"
             for key, loc in listed_data:
-                x, y, w, h = loc[0], loc[1], 20, 20
-                cv2.rectangle(image, (x, y), (x + w, y + h), (248, 240, 202), -1)
-                # image = cv2.addWeighted(
-                #     image, alpha, self.fullImage, 1 - alpha, 0)
+                cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 20, loc[1] + 20), self.x.color, -1)
                 text_size, _ = cv2.getTextSize(
-                    key, cv2.FONT_HERSHEY_TRIPLEX, 0.45, 1)
-                text_x = x + (w - text_size[0]) // 2
-                text_y = y + (h + text_size[1]) // 2
-                cv2.putText(image, key, (text_x, text_y), cv2.FONT_HERSHEY_TRIPLEX, 0.45,
+                    key, cv2.FONT_HERSHEY_SIMPLEX, 0.48, 1)
+                text_x = loc[0] + (20 - text_size[0]) // 2
+                text_y = loc[1] + (20 + text_size[1]) // 2
+                cv2.putText(image, key, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.45,
                             (0, 0, 0), 1, cv2.LINE_AA)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            pil_image = Image.fromarray(image)
-            tk_image = ImageTk.PhotoImage(pil_image)
-            return tk_image
+            iosuccess, buffer = cv2.imencode(".png", image)
+            with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_file:
+                temp_file.write(buffer.tobytes())
+                return tk.PhotoImage(file=temp_file.name)
 
-        def update_dict(input_char, dict_items):
-            try:
-                assert len(dict_items)>0
-            except TypeError or AssertionError:
-                exit()
-            toReturn = None
-            if input_char != "":
-                try:
-                    filtered_items = [
-                        (k, v) for k, v in dict_items if k[0].lower() == input_char.lower()]
-                    toReturn = [(k[1:], v) for k, v in filtered_items]
-                except IndexError:
-                    exit()
-            else:
-                if isinstance(dict_items, dict):
-                    toReturn = list(dict_items.items())
-            try:
-                if len(toReturn):
-                    return toReturn
-            except TypeError:
-                exit()
-            else:
-                return None
 
+        def update_list(input_char, items):
+            filtered_items = [
+                    (input_identifier, point) for input_identifier, point in items if input_identifier[0].lower() == input_char.lower()]
+            return [(k[len(input_char):], v) for k, v in filtered_items]
+            
         update = self.coordinate_data.copy()
-        while "".join(key_buffer[-length:]) not in keys:
-            image = self.converted_image.copy()
+        test = "".join(key_buffer[-length:]) not in keys 
+        for i in range(length):
             root = tk.Tk()
-            root.title("Screenshot with Keyboard Controls")
-            canvas = tk.Canvas(
-                root, width=image.shape[1], height=image.shape[0])
-            canvas.pack()
-            root.wm_attributes("-topmost", True)
-            image = self.converted_image.copy()
-            update = update_dict(key_buffer[-1], update)
-            if update == None:
-                break
-            root.lift()
+            image = self.original_image.copy()
+            root.wm_attributes('-fullscreen', True)
             root.focus_force()
-            height, width, left, top = image.shape[1], image.shape[0], 0, 0 
-            root.geometry(f"{height}x{width}+{left}+{top}")
-            root.wm_attributes('-fullscreen', 'True')
-            tk_image = edited_image(update, image, root)
-            canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)
+            python_image = edited_image(update, image, root)
+            ttk.Label(root, image=python_image).pack()
             root.after(1, lambda: root.focus_force())
             root.bind("<Key>", lambda e: root.destroy())
             root.mainloop()
-
-        if "".join(key_buffer[-length:]) in keys:
-            self.selected_coordinate = self.coordinate_data["".join(key_buffer[-length:])]
+            try:
+                update = update_list(key_buffer[-1], update)
+                test = "".join(key_buffer[-length:]) not in keys
+                if len(update) == 0 or len(update) == 1 or len(key_buffer) != (i+1):
+                    break
+            except IndexError:
+                break
 
         listener.stop()
+        try:
+            self.selected_coordinate = {k: v for k, v in self.coordinate_data}["".join(key_buffer[-length:])]
+            time.sleep(0.15)
+            self.x.mouse([self.selected_coordinate[0]+5, self.selected_coordinate[1]+5], clicks=clicks)
+            return False
+        except KeyError:
+            def rgb_to_hex(rgb):
+                r, g, b = rgb
+                return f"#{r:02x}{g:02x}{b:02x}"
+
+            def select_color():
+                color = cc.askcolor()[1]
+                if color:
+                    if isinstance(color, str) and color.startswith('#'):
+                        color = tuple(int(color[i:i+2], 16) for i in (1, 3, 5))
+                    self.x.color = tuple(map(int, color))
+                    label.config(text=f"Selected color: {self.x.color}")
+                    label.config(foreground=rgb_to_hex(self.x.color))
+
+            def exit_app():
+                global exit_flag
+                exit_flag = True
+                root.destroy()
+                root.quit()
+
+            global exit_flag
+            exit_flag = False
+            root = tk.Tk()
+            root.title("KeyFlare Preferences")
+            root.geometry("300x300")
+            style = ThemedStyle(root)
+            style.set_theme("equilux")
+            label_frame = ttk.Frame(root, padding=20)
+            label_frame.pack(fill="both", expand=True)
+            label_frame.config(borderwidth=2, relief="groove")
+            label = ttk.Label(label_frame, text="Selected color:", font=("Arial", 14), background=rgb_to_hex(self.x.color), foreground="#000000")
+            label.pack()
+            select_button = ttk.Button(root, text="Select Color", command=select_color)
+            select_button.pack(pady=10)
+            exit_button = ttk.Button(root, text="Completely Exit KeyFlare", command=exit_app)
+            exit_button.pack(pady=10)
+            pass_button = ttk.Button(root, text="Continue", command=root.destroy)
+            pass_button.pack(pady=10)
+            root.mainloop()
+            return exit_flag
+
 
 def main():
     """
@@ -484,35 +399,54 @@ def main():
     Returns:
         None
     """
-    identifier(x=system(fast=False))
+    global y
+    y = pipeline()
     start_combination = [
-        {keyboard.Key.shift, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
-        {keyboard.Key.shift, keyboard.KeyCode(char='A'), keyboard.KeyCode(char='Z')}
+        {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
+        {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
     ]
 
     current = set()
+    global left_pressed, right_pressed
+    left_pressed = False
+    right_pressed = False
 
     def on_press(key):
+        global y, left_pressed, right_pressed
+        if key == keyboard.Key.alt_l:
+            left_pressed = True
+        elif key == keyboard.Key.alt_r:
+            right_pressed = True
         if any([key in COMBO for COMBO in start_combination]):
             current.add(key)
             if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                identifier()
-            
+                if left_pressed:
+                    y.run()
+                elif right_pressed:
+                    y.run(clicks=2)
+                    
     def on_release(key):
+        global left_pressed, right_pressed
+        if key == keyboard.Key.alt_l:
+            left_pressed = False
+        elif key == keyboard.Key.alt_r:
+            right_pressed = False
         if any([key in COMBO for COMBO in start_combination]):
-            current.remove(key)
-
-
+            try:
+                current.remove(key)
+            except:
+                pass
+        
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()
 
-    # Keep the main thread alive
     while True:
         try:
             time.sleep(1)
+            if y.exit_flag:
+                sys.exit()
         except KeyboardInterrupt:
             break
-    
     listener.stop()
 
 

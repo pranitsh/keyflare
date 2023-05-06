@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['keyflare\\main.py'],
+    ['keyflare/main.py'],
     pathex=[],
     binaries=[],
     datas=[],
