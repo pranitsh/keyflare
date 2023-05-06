@@ -1,3 +1,4 @@
+[![Build KeyFlare executables](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml/badge.svg)](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml)
 # KeyFlare
 ## About
 KeyFlare v0.1.0 is a useful tool that enables users to interactively control their mouse using their keyboard. KeyFlare can provide an expanded user experience for those who prefer to use a keyboard over a mouse.
