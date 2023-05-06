@@ -33,63 +33,30 @@ jobs:
       - name: Run build script on Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pyinstaller --onefile --noconsole keyflare/main.py
+          pyinstaller --onefile --noconsole keyflare/keyflare.py
       - name: Run build script on Windows
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --noconsole --windowed keyflare/main.py
+          pyinstaller --onefile --noconsole --windowed keyflare/keyflare.py
       - name: Run build script on macOS
         if: matrix.os == 'macOS-latest'
         run: |
-          pyinstaller --onefile --noconsole --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/main.py
+          pyinstaller --onefile --noconsole --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/keyflare.py
       - name: Upload artifacts for Linux
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
         with:
           name: keyflare-${{ matrix.os }}
-          path: dist/main
+          path: dist/keyflare
       - name: Upload artifacts for Windows
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v2
         with:
           name: keyflare-${{ matrix.os }}
-          path: dist/main
+          path: dist/keyflare.exe
       - name: Upload artifacts for macOS
         if: matrix.os == 'macOS-latest'
         uses: actions/upload-artifact@v2
         with:
           name: keyflare-${{ matrix.os }}
-          path: dist/main.app
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: dist/
-
-      - name: Get commit message
-        id: commit_message
-        run: |
-          COMMIT_MESSAGE=$(git log --format=%B -n 1)
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
-
-      - name: Create tag from commit message
-        run: |
-          TAG_NAME="v$(echo '${{ env.COMMIT_MESSAGE }}' | grep -oP '(\d+\.)+\d+')"
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
-        if: startsWith(env.COMMIT_MESSAGE, 'Release')
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.TAG_NAME }}
-          files: "dist/*"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: dist/keyflare.app
