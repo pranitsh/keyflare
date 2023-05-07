@@ -11,9 +11,7 @@ from rtree import index
 import pathlib
 import sys
 import tempfile
-import platform
-if platform.system() != "Linux":
-    from pynput import keyboard
+from pynput import keyboard
 
 class system:
     """
@@ -400,66 +398,55 @@ def main():
     Returns:
         None
     """
-    system = platform.system()
-    if system == 'Linux':
-        y = pipeline()
-        y.run(clicks=sys.argv[1])
-    elif system != 'Linux':
-        global y
-        y = pipeline()
-        start_combination = [
-            {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
-            {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
-        ]
+    y = pipeline()
+    start_combination = [
+        {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
+        {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
+    ]
 
-        current = set()
+    current = set()
+    global left_pressed, right_pressed
+    left_pressed = False
+    right_pressed = False
+
+    def on_press(key):
+        global y, left_pressed, right_pressed
+        if key == keyboard.Key.alt_l:
+            left_pressed = True
+        elif key == keyboard.Key.alt_r:
+            right_pressed = True
+        if any([key in COMBO for COMBO in start_combination]):
+            current.add(key)
+            if any(all(k in current for k in COMBO) for COMBO in start_combination):
+                if left_pressed:
+                    y.run()
+                elif right_pressed:
+                    y.run(clicks=2)
+                    
+    def on_release(key):
         global left_pressed, right_pressed
-        left_pressed = False
-        right_pressed = False
-
-        def on_press(key):
-            global y, left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = True
-            elif key == keyboard.Key.alt_r:
-                right_pressed = True
-            if any([key in COMBO for COMBO in start_combination]):
-                current.add(key)
-                if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    if left_pressed:
-                        y.run()
-                    elif right_pressed:
-                        y.run(clicks=2)
-                        
-        def on_release(key):
-            global left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = False
-            elif key == keyboard.Key.alt_r:
-                right_pressed = False
-            if any([key in COMBO for COMBO in start_combination]):
-                try:
-                    current.remove(key)
-                except:
-                    pass
-            
-        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-        listener.start()
-
-        while True:
+        if key == keyboard.Key.alt_l:
+            left_pressed = False
+        elif key == keyboard.Key.alt_r:
+            right_pressed = False
+        if any([key in COMBO for COMBO in start_combination]):
             try:
-                time.sleep(1)
-                if y.exit_flag:
-                    sys.exit()
-            except KeyboardInterrupt:
-                break
-        listener.stop()
+                current.remove(key)
+            except:
+                pass
+        
+    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+    listener.start()
+
+    while True:
+        try:
+            time.sleep(1)
+            if y.exit_flag:
+                sys.exit()
+        except KeyboardInterrupt:
+            break
+    listener.stop()
 
 
 if __name__ == "__main__":
-    system = platform.system()
-    if system == 'Linux':
-        y = pipeline()
-        y.run(clicks=sys.argv[1])
-    elif system != 'Linux':
-        main()
+    main()
