@@ -1,3 +1,4 @@
 #!/bin/bash
-source /home/pranit/Documents/GitHub/keyflare/.venv/bin/activate
-python3 /home/pranit/Documents/GitHub/keyflare/keyflare/keyflare.py $1
+source ./.venv/bin/activate
+pip install -r ./requirements.txt
+python3 ./keyflare/keyflare.py $1
