@@ -398,6 +398,7 @@ def main():
     Returns:
         None
     """
+    global y
     y = pipeline()
     start_combination = [
         {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
