@@ -1,4 +1,3 @@
 #!/bin/bash
-cd ..
-source ./keyflare/.venv/bin/activate
-python3 ./keyflare/keyflare/keyflare.py $1
+source /home/pranit/Documents/GitHub/keyflare/.venv/bin/activate
+python3 /home/pranit/Documents/GitHub/keyflare/keyflare/keyflare.py $1
