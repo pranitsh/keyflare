@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.colorchooser as cc
 from ttkthemes import ThemedStyle
-from pynput import keyboard
 import numpy as np
 import pyautogui
 import time
@@ -13,6 +12,8 @@ import pathlib
 import sys
 import tempfile
 import platform
+if platform.system() != "Linux":
+    from pynput import keyboard
 
 class system:
     """
