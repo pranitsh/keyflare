@@ -12,7 +12,7 @@ from rtree import index
 import pathlib
 import sys
 import tempfile
-import os
+import platform
 
 class system:
     """
@@ -451,4 +451,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    system = platform.system()
+    if system == 'Linux':
+        y = pipeline()
+        y.run(clicks=sys.argv[1])
+    else:
+        main()
