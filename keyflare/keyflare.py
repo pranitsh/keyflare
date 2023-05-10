@@ -216,7 +216,7 @@ def main():
         try:
             from pynput import keyboard
         except ImportError:
-            print("[Main] Could not use pynput's keyboard library due to limited capability on linux. \n[Main] You should use this script through system hotkeys only.")
+            print("[Main] Could not use pynput's keyboard library for using the app-generated hotkeys due to pynput's limited capability on linux. \n[Main] You should use this script through system hotkeys only.")
             z.run(clicks=1)
             exit()
     
