@@ -11,6 +11,7 @@ import pathlib
 import sys
 import tempfile
 import copy
+import platform
 
 class System:
     generalPath = ""
@@ -134,7 +135,6 @@ class GUI:
         self.original_image = self.y.original_image
         self.label = None
         self.selecting_coordinate(clicks)
-
     def selecting_coordinate(self, clicks):
         for i in range(6):
             image = self.original_image.copy()
@@ -165,7 +165,6 @@ class GUI:
                 self.label.destroy()
                 style = ttk.Style()
                 style.theme_use("classic")
-                self.root.geometry("300x300")
                 label_frame = ttk.Frame(self.root, padding=20)
                 label_frame.pack(fill="both", expand=True)
                 self.label = ttk.Label(label_frame, text="Selected color:", font=("Arial", 14), background=self.rgb_to_hex(self.color), foreground="#000000")
@@ -174,7 +173,7 @@ class GUI:
                 select_button.pack(pady=10)
                 exit_button = ttk.Button(self.root, text="Completely Exit KeyFlare", command=self.exit_app)
                 exit_button.pack(pady=10)
-                pass_button = ttk.Button(self.root, text="Continue (Press Enter)", command=self.root.destroy)
+                pass_button = ttk.Button(self.root, text="Continue (or Press Any Key)", command=self.root.destroy)
                 pass_button.pack(pady=10)
                 self.root.bind("<Key>", lambda e: self.root.destroy())
                 self.root.mainloop()
@@ -208,54 +207,53 @@ def main():
         clicks=int(sys.argv[1])
         z.run(clicks=clicks)
     else:
-        try:
+        if platform.system() == 'Windows':
             from pynput import keyboard
-        except ImportError:
+            start_combination = [
+                {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
+                {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
+            ]
+            current = set()
+            
+            global left_pressed, right_pressed
+            left_pressed = False
+            right_pressed = False
+
+            def on_press(key):
+                global y, left_pressed, right_pressed
+                if key == keyboard.Key.alt_l:
+                    left_pressed = True
+                elif key == keyboard.Key.alt_r:
+                    right_pressed = True
+                if any([key in COMBO for COMBO in start_combination]):
+                    current.add(key)
+                    if any(all(k in current for k in COMBO) for COMBO in start_combination):
+                        if left_pressed:
+                            z.run(clicks=1)
+                        elif right_pressed:
+                            z.run(clicks=2)
+                            
+            def on_release(key):
+                global left_pressed, right_pressed
+                if key == keyboard.Key.alt_l:
+                    left_pressed = False
+                elif key == keyboard.Key.alt_r:
+                    right_pressed = False
+                if any([key in COMBO for COMBO in start_combination]):
+                    try:
+                        current.remove(key)
+                    except:
+                        pass
+                
+            listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+            listener.start()
+
+            while not z.exit_flag:
+                time.sleep(0.5)
+            listener.stop()
+        else:
             print("[Main] We cannot use this app to run hotkeys on your os. \n[Main] You can either run this script through your system hotkeys or terminal commands.")
             z.run(clicks=1)
-            exit()
-        start_combination = [
-            {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
-            {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
-        ]
-        current = set()
-        
-        global left_pressed, right_pressed
-        left_pressed = False
-        right_pressed = False
-
-        def on_press(key):
-            global y, left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = True
-            elif key == keyboard.Key.alt_r:
-                right_pressed = True
-            if any([key in COMBO for COMBO in start_combination]):
-                current.add(key)
-                if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    if left_pressed:
-                        z.run(clicks=1)
-                    elif right_pressed:
-                        z.run(clicks=2)
-                        
-        def on_release(key):
-            global left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = False
-            elif key == keyboard.Key.alt_r:
-                right_pressed = False
-            if any([key in COMBO for COMBO in start_combination]):
-                try:
-                    current.remove(key)
-                except:
-                    pass
-            
-        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-        listener.start()
-
-        while not z.exit_flag:
-            time.sleep(1)
-        listener.stop()
 
 
 if __name__ == "__main__":
