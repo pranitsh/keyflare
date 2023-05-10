@@ -36,7 +36,6 @@ class ImagePipeline:
     x = System()
     
     def run(self):
-        start_time = time.perf_counter()
         self.coordinate_data = list()
         self.processed_contours = list()
         self.processed_image = None
@@ -44,9 +43,6 @@ class ImagePipeline:
         self.original_image = self.x.image()
         self.processing_image()
         self.processing_data()
-        end_time = time.perf_counter()
-        time_difference = end_time - start_time
-        print(f"The process took {time_difference} seconds.")
 
     def processing_image(self):
         image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
@@ -208,60 +204,58 @@ class GUI:
 def main():
     global z
     z = GUI()
-    try:
+    if len(sys.argv) >= 2:
         clicks=int(sys.argv[1])
         z.run(clicks=clicks)
-        exit()
-    except (IndexError, ValueError):
+    else:
         try:
             from pynput import keyboard
         except ImportError:
-            print("[Main] Could not use pynput's keyboard library for using the app-generated hotkeys due to pynput's limited capability on linux. \n[Main] You should use this script through system hotkeys only.")
+            print("[Main] We cannot use this app to run hotkeys on your os. \n[Main] You can either run this script through your system hotkeys or terminal commands.")
             z.run(clicks=1)
             exit()
-    
-    start_combination = [
-        {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
-        {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
-    ]
-    current = set()
-    
-    global left_pressed, right_pressed
-    left_pressed = False
-    right_pressed = False
-
-    def on_press(key):
-        global y, left_pressed, right_pressed
-        if key == keyboard.Key.alt_l:
-            left_pressed = True
-        elif key == keyboard.Key.alt_r:
-            right_pressed = True
-        if any([key in COMBO for COMBO in start_combination]):
-            current.add(key)
-            if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                if left_pressed:
-                    z.run(clicks=1)
-                elif right_pressed:
-                    z.run(clicks=2)
-                    
-    def on_release(key):
-        global left_pressed, right_pressed
-        if key == keyboard.Key.alt_l:
-            left_pressed = False
-        elif key == keyboard.Key.alt_r:
-            right_pressed = False
-        if any([key in COMBO for COMBO in start_combination]):
-            try:
-                current.remove(key)
-            except:
-                pass
+        start_combination = [
+            {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
+            {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
+        ]
+        current = set()
         
-    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-    listener.start()
+        global left_pressed, right_pressed
+        left_pressed = False
+        right_pressed = False
 
-    while not z.exit_flag:
-        time.sleep(1)
-    listener.stop()
+        def on_press(key):
+            global y, left_pressed, right_pressed
+            if key == keyboard.Key.alt_l:
+                left_pressed = True
+            elif key == keyboard.Key.alt_r:
+                right_pressed = True
+            if any([key in COMBO for COMBO in start_combination]):
+                current.add(key)
+                if any(all(k in current for k in COMBO) for COMBO in start_combination):
+                    if left_pressed:
+                        z.run(clicks=1)
+                    elif right_pressed:
+                        z.run(clicks=2)
+                        
+        def on_release(key):
+            global left_pressed, right_pressed
+            if key == keyboard.Key.alt_l:
+                left_pressed = False
+            elif key == keyboard.Key.alt_r:
+                right_pressed = False
+            if any([key in COMBO for COMBO in start_combination]):
+                try:
+                    current.remove(key)
+                except:
+                    pass
+            
+        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+        listener.start()
+
+        while not z.exit_flag:
+            time.sleep(1)
+        listener.stop()
 
 
 if __name__ == "__main__":
