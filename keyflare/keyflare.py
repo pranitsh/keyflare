@@ -49,8 +49,8 @@ class ImagePipeline:
         image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
         thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
         self.original_contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        i = 2
-        while (i <= 4) and (i == 2 or not len(self.contours) < 676):
+        i = 3
+        while (i <= 4) and (i == 3 or not len(self.contours) < 676):
             thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
             kernel = np.ones((1, i), np.uint8)
             dilated = cv2.dilate(thresh, kernel, iterations=1)
@@ -141,10 +141,10 @@ class GUI:
         for character_number in range(len(self.coordinate_data[0][0])):
             image = self.original_image.copy()
             for key, loc in self.coordinate_data:
-                image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 15 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
-                text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_TRIPLEX, 0.55, 1)
-                image = cv2.putText(image, key, (loc[0] + (15 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
-                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 1, cv2.LINE_AA)
+                image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
+                text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_PLAIN, 0.75, 1)
+                image = cv2.putText(image, key, (loc[0] + (10 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
+                     cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             _, buffer = cv2.imencode(".png", image)
             with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
@@ -203,66 +203,60 @@ class GUI:
         return f"#{r:02x}{g:02x}{b:02x}"
 
 def main():
-    """
-    Entry point for the script. Starts a keyboard listener that calls the class identifier() when the keyboard combination Shift + A + Z is pressed. An alternative method to exit the script is to press Ctrl + C on Windows or Ctrl + Z on Ubuntu.
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
     global z
     z = GUI()
     
     try:
-        z.run(clicks=int(sys.argv[1]))
+        clicks=int(sys.argv[1])
+        z.run(clicks=clicks)
     except (IndexError, ValueError):
-        print("Using pynput's keyboard library")
-        from pynput import keyboard
-        start_combination = [
-            {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
-            {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
-        ]
-        current = set()
-        
-        global left_pressed, right_pressed
-        left_pressed = False
-        right_pressed = False
-
-        def on_press(key):
-            global y, left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = True
-            elif key == keyboard.Key.alt_r:
-                right_pressed = True
-            if any([key in COMBO for COMBO in start_combination]):
-                current.add(key)
-                if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    if left_pressed:
-                        z.run(clicks=1)
-                    elif right_pressed:
-                        z.run(clicks=2)
-                        
-        def on_release(key):
-            global left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = False
-            elif key == keyboard.Key.alt_r:
-                right_pressed = False
-            if any([key in COMBO for COMBO in start_combination]):
-                try:
-                    current.remove(key)
-                except:
-                    pass
+        try:
+            from pynput import keyboard
+            start_combination = [
+                {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
+                {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
+            ]
+            current = set()
             
-        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-        listener.start()
+            global left_pressed, right_pressed
+            left_pressed = False
+            right_pressed = False
 
-        while not z.exit_flag:
-            time.sleep(1)
-        listener.stop()
+            def on_press(key):
+                global y, left_pressed, right_pressed
+                if key == keyboard.Key.alt_l:
+                    left_pressed = True
+                elif key == keyboard.Key.alt_r:
+                    right_pressed = True
+                if any([key in COMBO for COMBO in start_combination]):
+                    current.add(key)
+                    if any(all(k in current for k in COMBO) for COMBO in start_combination):
+                        if left_pressed:
+                            z.run(clicks=1)
+                        elif right_pressed:
+                            z.run(clicks=2)
+                            
+            def on_release(key):
+                global left_pressed, right_pressed
+                if key == keyboard.Key.alt_l:
+                    left_pressed = False
+                elif key == keyboard.Key.alt_r:
+                    right_pressed = False
+                if any([key in COMBO for COMBO in start_combination]):
+                    try:
+                        current.remove(key)
+                    except:
+                        pass
+                
+            listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+            listener.start()
 
+            while not z.exit_flag:
+                time.sleep(1)
+            listener.stop()
+        except ImportError:
+            print("[Main] Could not use pynput's keyboard library due to limited capability on linux. \n[Main] You should use this script through command line inputs only.")
+            z.run(clicks=1)
 
 if __name__ == "__main__":
     main()
