@@ -13,18 +13,20 @@ KeyFlare is a useful tool that enables users to interactively control their mous
 
 ## Installation
 
-### For Windows and macOS users:
+### For all users
 
 - Download and run the latest KeyFlare binary from the the [releases](https://github.com/Pshah2023/keyflare/releases/).
   - Although I am an unverified developer, you can ignore those warnings. I plan to solve this problem in the near future.
-- For linux users
+ 
+#### For linux users
+- Try the binary. If something doesn't work, refer to these steps.
+- You may have to make the script executable first before you can run it.
+- You may need to connect a system hotkey to the command `/path/to/keyflare 1` (the number represents the number of clicks) since pynput's keyboard library may not work on wayland-based systems.
 
-### For Linux users:
+#### Developers
 
-- Download the latest KeyFlare binary from the the [releases](https://github.com/Pshah2023/keyflare/releases/).
-- Make the executable runable.
-- Connect a system gnome keyboard hotkey to the command /path/to/keyflare 1 (the number represents the number of clicks)
-- Enjoy!
+- Use `git clone https://github.com/Pshah2023/keyflare.git` to install the source code
+- Run in terminal `bash keyflare/run.sh install` to download prerequisite libraries and help develop the product
 
 
 **[Please fill out the survey](https://forms.gle/VtxPTN4WKMyU4uwV9)**
