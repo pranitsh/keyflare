@@ -1,4 +1,5 @@
-# Documentation
+[![Build KeyFlare executables](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml/badge.svg)](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml)
+# KeyFlare 
 ## About
 KeyFlare is a useful tool that enables users to interactively control their mouse using their keyboard. KeyFlare can provide an expanded user experience for those who prefer to use a keyboard over a mouse. Showcases available soon on week 5 (old showcases available on week 2 and 3) of my [senior project page](https://sites.google.com/email.medfield.net/psp/0?authuser=0).
 
@@ -8,7 +9,7 @@ KeyFlare is a useful tool that enables users to interactively control their mous
 - Improved hotkeys: Initating KeyFlare with Left Alt+A+Z combination will click the screen once at the end while the right Alt+A+Z combination will click the screen twice.
   - Inputs arguments let you define the number of clicks when run from terminal
 - Customizable user experience: A preferences window allows users to change the background color, exit the application, or exit just the current process (or by pressing Return).
-- Enhanced image segmentation algorithm that optimizes usability and installation speed.
+- Enhanced image segmentation algorithm that optimizes speed.
 - Cross-platform compatibility with Linux, macOS, and Windows: all desktop environments!
 
 ## Installation

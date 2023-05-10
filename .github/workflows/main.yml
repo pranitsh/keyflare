@@ -2,11 +2,11 @@ name: Build KeyFlare executables
 
 on:
   push:
-  # branches:
-  #   - main
+    branches:
+      - main
   pull_request:
-    # branches:
-    #   - main
+    branches:
+      - main
 
 jobs:
   build:
@@ -41,6 +41,7 @@ jobs:
         if: matrix.os == 'macOS-latest'
         run: |
           pyinstaller --onefile --noconsole --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/keyflare.py
+          zip -r dist/keyflare_macOS.zip dist/keyflare.app
       - name: Upload artifacts for Linux
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
@@ -58,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: keyflare-${{ matrix.os }}
-          path: dist/keyflare.app
+          path: dist/keyflare_macOS.zip

@@ -30,36 +30,32 @@ class System:
 class ImagePipeline:
     processed_image = None
     original_image = None
-    contours = list()
-    coordinate_data = list()
+    processed_contours = list()
     original_contours = list()
+    coordinate_data = list()
     x = System()
     
     def run(self):
+        start_time = time.perf_counter()
         self.coordinate_data = list()
-        self.contours = list()
+        self.processed_contours = list()
         self.processed_image = None
         self.original_contours = list()
         self.original_image = self.x.image()
         self.processing_image()
-        self.collecting_data()
         self.processing_data()
+        end_time = time.perf_counter()
+        time_difference = end_time - start_time
+        print(f"The process took {time_difference} seconds.")
 
     def processing_image(self):
         image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
         thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
         self.original_contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        i = 3
-        while (i <= 4) and (i == 3 or not len(self.contours) < 676):
-            thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-            kernel = np.ones((1, i), np.uint8)
-            dilated = cv2.dilate(thresh, kernel, iterations=1)
-            contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            self.contours = contours
-            i += 1
-
-    def collecting_data(self):
-        for cnt in self.contours:
+        kernel = np.ones((1, 4), np.uint8)
+        dilated = cv2.dilate(thresh, kernel, iterations=1)
+        self.processed_contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for cnt in self.processed_contours:
             x, y, w, h = cv2.boundingRect(cnt)
             self.coordinate_data.append([x, y, w, h])
         for cnt in self.original_contours:
@@ -67,29 +63,35 @@ class ImagePipeline:
             self.coordinate_data.append([x, y, w, h])
 
     def processing_data(self):
-        def remove_intersecting_boxes(data_points, larger=True):
-            rt = index.Index()
-            for i, data_point in enumerate(data_points):
-                if data_point[2] * data_point[3] > 15:
-                    rt.insert(i, (data_point[0], data_point[1], data_point[0]+data_point[2], data_point[1]+data_point[3]))
-            boxes_to_remove = set()
-            for i, data_point in enumerate(data_points):
-                if i not in boxes_to_remove:
-                    intersectingIndices = list(rt.intersection(
-                        (data_point[0]-2, data_point[1]-2, data_point[0]+data_point[2]+4, data_point[1]+data_point[3]+4)))
-                    if len(intersectingIndices) > 1:
-                        for j in intersectingIndices:
-                            if i != j:
-                                if data_points[i][2] * data_points[i][3] <= data_points[j][2] * data_points[j][3]:
-                                    boxes_to_remove.add(j)
-            for i in boxes_to_remove:
-                rt.delete(i, (data_points[i][0], data_points[i][1], data_points[i][0] + data_points[i][2], data_points[i][1]+data_points[i][3]))
-            allItems = list()
-            for item in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
-                allItems.append(data_points[item])
-            return allItems
-
-        self.coordinate_data = remove_intersecting_boxes(self.coordinate_data)
+        properties = index.Property()
+        properties.dimension = 2
+        properties.dat_extension = 'data'
+        properties.idx_extension = 'index'
+        properties.buffering_capacity = 200
+        properties.pagesize = 8192
+        properties.node_capacity = 100
+        properties.leaf_capacity = 100
+        properties.fill_factor = 0.1
+        rt = index.Index(properties=properties)
+        boxes_to_remove = set()
+        for i, data_point in enumerate(self.coordinate_data):
+            if data_point[2] * data_point[3] > 15:
+                rt.insert(i, (data_point[0], data_point[1], data_point[0]+data_point[2], data_point[1]+data_point[3]))
+        for i in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
+            if i not in boxes_to_remove:
+                intersectingIndices = list(rt.intersection(
+                    (self.coordinate_data[i][0]-10, self.coordinate_data[i][1]-10, self.coordinate_data[i][0]+self.coordinate_data[i][2]+10, self.coordinate_data[i][1]+self.coordinate_data[i][3]+10)))
+                if len(intersectingIndices) > 1:
+                    for j in intersectingIndices:
+                        if i != j:
+                            if (self.coordinate_data[i][2]*self.coordinate_data[i][3]) <= self.coordinate_data[j][2]*self.coordinate_data[j][3]:
+                                boxes_to_remove.add(j)
+        for i in boxes_to_remove:
+            rt.delete(i, (self.coordinate_data[i][0], self.coordinate_data[i][1], self.coordinate_data[i][0] + self.coordinate_data[i][2], self.coordinate_data[i][1]+self.coordinate_data[i][3]))
+        allItems = list()
+        for item in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
+            allItems.append(self.coordinate_data[item])
+        self.coordinate_data = allItems
 
         def generate_alphabet_strings(length, current_string="", alphabet="etaoinsrhlcdumfpwybgvkxjqz"):
             if length == 1:
@@ -138,32 +140,33 @@ class GUI:
         self.selecting_coordinate(clicks)
 
     def selecting_coordinate(self, clicks):
-        for character_number in range(len(self.coordinate_data[0][0])):
+        for i in range(6):
             image = self.original_image.copy()
-            for key, loc in self.coordinate_data:
-                image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
-                text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_PLAIN, 0.75, 1)
-                image = cv2.putText(image, key, (loc[0] + (10 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
-                     cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            _, buffer = cv2.imencode(".png", image)
-            with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
-                temp_file.write(buffer.tobytes())
-                image = tk.PhotoImage(file=temp_file.name)
             if self.label:
                 self.label.destroy()
-            self.label = ttk.Label(self.root, image=image)
-            self.label.pack()
-            self.root.after(1, self.root.focus_force)
-            self.root.bind("<Key>", self.on_key)
-            self.root.mainloop()
+            if self.root.winfo_exists():
+                for key, loc in self.coordinate_data:
+                    image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
+                    text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_PLAIN, 0.75, 1)
+                    image = cv2.putText(image, key, (loc[0] + (10 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
+                        cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                _, buffer = cv2.imencode(".png", image)
+                with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
+                    temp_file.write(buffer.tobytes())
+                    image = tk.PhotoImage(file=temp_file.name)
+                self.label = ttk.Label(self.root, image=image)
+                self.label.pack()
+                self.root.after(1, self.root.focus_force)
+                self.root.bind("<Key>", self.on_key)
+                self.root.mainloop()
             if len(self.coordinate_data) == 1:
                 self.root.destroy()
-                self.x.mouse([self.coordinate_data[0][1][0]+5, self.coordinate_data[0][1][1]+5], clicks=clicks)
+                self.x.mouse([self.coordinate_data[0][1][0]+10, self.coordinate_data[0][1][1]+10], clicks=clicks)
+                break
             elif len(self.coordinate_data) == 0:
-                self.root.destroy()
-                self.root = tk.Tk()
-                self.root.title("KeyFlare")
+                self.root.quit()
+                self.label.destroy()
                 style = ttk.Style()
                 style.theme_use("classic")
                 self.root.geometry("300x300")
@@ -177,7 +180,7 @@ class GUI:
                 exit_button.pack(pady=10)
                 pass_button = ttk.Button(self.root, text="Continue (Press Enter)", command=self.root.destroy)
                 pass_button.pack(pady=10)
-                self.root.bind("<Return>", lambda e: self.root.destroy())
+                self.root.bind("<Key>", lambda e: self.root.destroy())
                 self.root.mainloop()
                 break
 
@@ -205,58 +208,61 @@ class GUI:
 def main():
     global z
     z = GUI()
-    
     try:
         clicks=int(sys.argv[1])
         z.run(clicks=clicks)
+        exit()
     except (IndexError, ValueError):
         try:
             from pynput import keyboard
-            start_combination = [
-                {keyboard.Key.alt_l, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')},
-                {keyboard.Key.alt_r, keyboard.KeyCode(char='a'), keyboard.KeyCode(char='z')}
-            ]
-            current = set()
-            
-            global left_pressed, right_pressed
-            left_pressed = False
-            right_pressed = False
-
-            def on_press(key):
-                global y, left_pressed, right_pressed
-                if key == keyboard.Key.alt_l:
-                    left_pressed = True
-                elif key == keyboard.Key.alt_r:
-                    right_pressed = True
-                if any([key in COMBO for COMBO in start_combination]):
-                    current.add(key)
-                    if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                        if left_pressed:
-                            z.run(clicks=1)
-                        elif right_pressed:
-                            z.run(clicks=2)
-                            
-            def on_release(key):
-                global left_pressed, right_pressed
-                if key == keyboard.Key.alt_l:
-                    left_pressed = False
-                elif key == keyboard.Key.alt_r:
-                    right_pressed = False
-                if any([key in COMBO for COMBO in start_combination]):
-                    try:
-                        current.remove(key)
-                    except:
-                        pass
-                
-            listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-            listener.start()
-
-            while not z.exit_flag:
-                time.sleep(1)
-            listener.stop()
         except ImportError:
-            print("[Main] Could not use pynput's keyboard library due to limited capability on linux. \n[Main] You should use this script through command line inputs only.")
+            print("[Main] Could not use pynput's keyboard library due to limited capability on linux. \n[Main] You should use this script through system hotkeys only.")
             z.run(clicks=1)
+            exit()
+    
+    start_combination = [
+        {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
+        {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
+    ]
+    current = set()
+    
+    global left_pressed, right_pressed
+    left_pressed = False
+    right_pressed = False
+
+    def on_press(key):
+        global y, left_pressed, right_pressed
+        if key == keyboard.Key.alt_l:
+            left_pressed = True
+        elif key == keyboard.Key.alt_r:
+            right_pressed = True
+        if any([key in COMBO for COMBO in start_combination]):
+            current.add(key)
+            if any(all(k in current for k in COMBO) for COMBO in start_combination):
+                if left_pressed:
+                    z.run(clicks=1)
+                elif right_pressed:
+                    z.run(clicks=2)
+                    
+    def on_release(key):
+        global left_pressed, right_pressed
+        if key == keyboard.Key.alt_l:
+            left_pressed = False
+        elif key == keyboard.Key.alt_r:
+            right_pressed = False
+        if any([key in COMBO for COMBO in start_combination]):
+            try:
+                current.remove(key)
+            except:
+                pass
+        
+    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+    listener.start()
+
+    while not z.exit_flag:
+        time.sleep(1)
+    listener.stop()
+
 
 if __name__ == "__main__":
     main()
