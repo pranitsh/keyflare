@@ -1,6 +1,6 @@
 # Updated Documentation
 ## About
-KeyFlare v0.3.2 is a useful tool that enables users to interactively control their mouse using their keyboard. KeyFlare can provide an expanded user experience for those who prefer to use a keyboard over a mouse. Showcases available on week 2 or 3 of my [senior project page](https://sites.google.com/email.medfield.net/psp/0?authuser=0).
+KeyFlare v0.4.0 is a useful tool that enables users to interactively control their mouse using their keyboard. KeyFlare can provide an expanded user experience for those who prefer to use a keyboard over a mouse. Showcases available on week 2 or 3 of my [senior project page](https://sites.google.com/email.medfield.net/psp/0?authuser=0).
 
 ### Features
 
