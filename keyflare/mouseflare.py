@@ -135,6 +135,7 @@ class GUI:
         self.original_image = self.y.original_image
         self.label = None
         self.selecting_coordinate(clicks)
+
     def selecting_coordinate(self, clicks):
         for i in range(6):
             image = self.original_image.copy()
@@ -200,59 +201,34 @@ class GUI:
         r, g, b = rgb
         return f"#{r:02x}{g:02x}{b:02x}"
 
-def keyboard_main():
+
+def mouse_main():
     global z
     z = GUI()
-    if len(sys.argv) == 0 and platform.system() == "Windows":
-        from pynput import keyboard
-        start_combination = [
-            {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
-            {keyboard.Key.alt_r, keyboard.KeyCode(char='a')}
-        ]
-        current = set()
-        
-        global left_pressed, right_pressed
-        left_pressed = False
-        right_pressed = False
+    from pynput import mouse
+    button_state = {'left': False, 'right': False}
+    def on_click(x, y, button, pressed, button_state):
+        if button == mouse.Button.left:
+            button_state['left'] = pressed
+        elif button == mouse.Button.right:
+            button_state['right'] = pressed
 
-        def on_press(key):
-            global y, left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = True
-            elif key == keyboard.Key.alt_r:
-                right_pressed = True
-            if any([key in COMBO for COMBO in start_combination]):
-                current.add(key)
-                if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    if left_pressed:
-                        z.run(clicks=1)
-                    elif right_pressed:
-                        z.run(clicks=2)
-                        
-        def on_release(key):
-            global left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = False
-            elif key == keyboard.Key.alt_r:
-                right_pressed = False
-            if any([key in COMBO for COMBO in start_combination]):
-                try:
-                    current.remove(key)
-                except:
-                    pass
-            
-        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-        listener.start()
+        if button_state['left'] and button_state['right']:
+            button_state['left'] = False
+            button_state['right'] = False
+            z.run(clicks=1)
 
-        while not z.exit_flag:
-            time.sleep(0.5)
-        listener.stop()
-    else:
-        print("[Main] We could not use hotkeys.\n[Main] You can either run this script through your system hotkeys or terminal commands.")
-        z.run(clicks=1)
+    listener =  mouse.Listener(on_click=lambda x, y, button, pressed: on_click(x, y, button, pressed, button_state))
+    listener.start()
+
+    while not z.exit_flag:
+        time.sleep(0.5)
+    listener.stop()
 
 def main():
-    keyboard_main()
+    mouse_main()
+
+
 
 if __name__ == "__main__":
     main()

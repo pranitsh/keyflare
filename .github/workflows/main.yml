@@ -2,11 +2,11 @@ name: Build KeyFlare executables
 
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
   pull_request:
-    branches:
-      - main
+    # branches:
+    #   - main
 
 jobs:
   build:
@@ -32,15 +32,15 @@ jobs:
       - name: Run build script on Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pyinstaller --onefile --noconsole keyflare/keyflare.py
+          pyinstaller --onefile keyflare/keyflare.py
       - name: Run build script on Windows
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --onefile --noconsole --windowed keyflare/keyflare.py
+          pyinstaller --onefile --windowed keyflare/keyflare.py
       - name: Run build script on macOS
         if: matrix.os == 'macOS-latest'
         run: |
-          pyinstaller --onefile --noconsole --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/keyflare.py
+          pyinstaller --onefile --windowed --osx-bundle-identifier "com.example.yourapp" keyflare/keyflare.py
           zip -r dist/keyflare_macOS.zip dist/keyflare.app
       - name: Upload artifacts for Linux
         if: matrix.os == 'ubuntu-latest'
