@@ -10,6 +10,7 @@ from rtree import index
 import pathlib
 import sys
 import tempfile
+import math
 import copy
 import platform
 
@@ -35,7 +36,7 @@ class ImagePipeline:
     original_contours = list()
     coordinate_data = list()
     x = System()
-    
+
     def run(self):
         self.coordinate_data = list()
         self.processed_contours = list()
@@ -121,10 +122,11 @@ class GUI:
     y = ImagePipeline()
     x = None
     exit_flag = False
-    color = (248, 93, 94)
+    color = [248, 93, 94]
     label = None
+    loca = None
 
-    def run(self, clicks):
+    def run(self, clicks, location):
         self.y.run()
         self.x  = self.y.x
         self.root = tk.Tk()
@@ -134,19 +136,19 @@ class GUI:
         self.root.focus_force()
         self.original_image = self.y.original_image
         self.label = None
+        self.loca = location
         self.selecting_coordinate(clicks)
 
     def selecting_coordinate(self, clicks):
-        for i in range(6):
+        while True:
             image = self.original_image.copy()
             if self.label:
                 self.label.destroy()
             if self.root.winfo_exists():
                 for key, loc in self.coordinate_data:
-                    image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
-                    text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_PLAIN, 0.75, 1)
-                    image = cv2.putText(image, key, (loc[0] + (10 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
-                        cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
+                    image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 6, loc[1] + 6), self.color, -1)
+                image = cv2.rectangle(image, (self.loca[0], self.loca[1]), (self.loca[0] + 6, self.loca[1] + 6), self.color[::-1], -1)
+                image = cv2.circle(image, self.loca, 30, self.color[::-1], 1)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 _, buffer = cv2.imencode(".png", image)
                 with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
@@ -156,6 +158,7 @@ class GUI:
                 self.label.pack()
                 self.root.after(1, self.root.focus_force)
                 self.root.bind("<Key>", self.on_key)
+                self.root.bind('<Motion>', self.motion)
                 self.root.mainloop()
             if len(self.coordinate_data) == 1:
                 self.root.destroy()
@@ -189,6 +192,22 @@ class GUI:
         self.exit_flag = True
         self.root.destroy()
 
+    def motion(self, event):
+        x, y = event.x, event.y
+        if 900 <= (self.loca[0]-x) **2 + (self.loca[1]-y) **2:
+            angle = math.degrees(math.atan2(y-self.loca[1], x-self.loca[0]))
+            rangeOfAngles = [(int(angle/90)+2)*90, (int(angle/90)+3)*90]
+            print(rangeOfAngles, angle)
+            self.loca = [x,y]
+            data = []
+            for each in self.coordinate_data:
+                itemAngle = math.degrees(math.atan2(each[1][1]-self.loca[1], each[1][0]-self.loca[0]))
+                if rangeOfAngles[0] * 90 <= itemAngle < rangeOfAngles[0] * 90:
+                    data.append(each)
+            self.coordinate_data = data
+            print(len(self.coordinate_data))
+            self.label.destroy()
+
     def select_color(self):
         color = cc.askcolor()[1]
         if color:
@@ -206,19 +225,11 @@ def mouse_main():
     global z
     z = GUI()
     from pynput import mouse
-    button_state = {'left': False, 'right': False}
-    def on_click(x, y, button, pressed, button_state):
-        if button == mouse.Button.left:
-            button_state['left'] = pressed
-        elif button == mouse.Button.right:
-            button_state['right'] = pressed
+    def on_click(x, y, button, pressed):
+        if button == mouse.Button.right and pressed:
+            z.run(clicks=1, location=[x, y])
 
-        if button_state['left'] and button_state['right']:
-            button_state['left'] = False
-            button_state['right'] = False
-            z.run(clicks=1)
-
-    listener =  mouse.Listener(on_click=lambda x, y, button, pressed: on_click(x, y, button, pressed, button_state))
+    listener =  mouse.Listener(on_click=on_click)
     listener.start()
 
     while not z.exit_flag:

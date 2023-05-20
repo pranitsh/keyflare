@@ -39,18 +39,17 @@ class ImagePipeline:
     def run(self):
         self.coordinate_data = list()
         self.processed_contours = list()
-        self.processed_image = None
         self.original_contours = list()
         self.original_image = self.x.image()
         self.processing_image()
         self.processing_data()
 
     def processing_image(self):
-        image = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
-        thresh = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-        self.original_contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        gray = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
+        threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+        self.original_contours, _ = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         kernel = np.ones((1, 4), np.uint8)
-        dilated = cv2.dilate(thresh, kernel, iterations=1)
+        dilated = cv2.dilate(threshold, kernel, iterations=1)
         self.processed_contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cnt in self.processed_contours:
             x, y, w, h = cv2.boundingRect(cnt)
@@ -81,7 +80,7 @@ class ImagePipeline:
                 if len(intersectingIndices) > 1:
                     for j in intersectingIndices:
                         if i != j:
-                            if (self.coordinate_data[i][2]*self.coordinate_data[i][3]) <= self.coordinate_data[j][2]*self.coordinate_data[j][3]:
+                            if (self.coordinate_data[i][2]*self.coordinate_data[i][3]) <= self.coordinate_data[j][2]*self.coordinate_data[j][3] - 5:
                                 boxes_to_remove.add(j)
         for i in boxes_to_remove:
             rt.delete(i, (self.coordinate_data[i][0], self.coordinate_data[i][1], self.coordinate_data[i][0] + self.coordinate_data[i][2], self.coordinate_data[i][1]+self.coordinate_data[i][3]))
@@ -89,6 +88,7 @@ class ImagePipeline:
         for item in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
             allItems.append(self.coordinate_data[item])
         self.coordinate_data = allItems
+        print(self.coordinate_data)
 
         def generate_alphabet_strings(length, current_string="", alphabet="etaoinsrhlcdumfpwybgvkxjqz"):
             if length == 1:
@@ -110,8 +110,17 @@ class ImagePipeline:
 
             return list(zip(alphabet_strings, items))
 
-        toMap = [[item[0], item[1]] for item in self.coordinate_data]
+        toMap = [[item[0], item[1], item[2], item[3]] for item in self.coordinate_data]
         self.coordinate_data = list_aphabet_strings(toMap)
+
+    # def viewData(self):
+    #     for each in self.coordinate_data:
+    #         self.original_image = cv2.rectangle(
+    #             self.original_image, (each[1][0], each[1][1]), (each[1][0] + each[1][2], each[1][1] + each[1][3]), (0, 255, 0), 3)
+    #         cvImage = cv2.resize(self.original_image, (0, 0), fx=0.75, fy=0.75)
+    #         cv2.imshow("screenshot", cvImage)
+    #         cv2.waitKey(0)
+
 
 class GUI:
     coordinate_data = list()
