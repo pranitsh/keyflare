@@ -10,7 +10,7 @@ from rtree import index
 import pathlib
 import sys
 import tempfile
-import copy
+import os
 import platform
 
 class System:
@@ -88,8 +88,6 @@ class ImagePipeline:
         for item in rt.intersection((float('-inf'), float('-inf'), float('inf'), float('inf'))):
             allItems.append(self.coordinate_data[item])
         self.coordinate_data = allItems
-        print(self.coordinate_data)
-
         def generate_alphabet_strings(length, current_string="", alphabet="etaoinsrhlcdumfpwybgvkxjqz"):
             if length == 1:
                 for letter in alphabet:
@@ -123,53 +121,53 @@ class ImagePipeline:
 
 
 class GUI:
-    coordinate_data = list()
     root = None
     input_char = ""
-    original_image = None
     y = ImagePipeline()
-    x = None
     exit_flag = False
     color = (248, 93, 94)
     label = None
+    temp_name = None
 
     def run(self, clicks):
         self.y.run()
-        self.x  = self.y.x
         self.root = tk.Tk()
-        self.coordinate_data = copy.deepcopy(self.y.coordinate_data)
         self.root.title("KeyFlare")
         self.root.wm_attributes('-fullscreen', True)
+        self.root.attributes('-topmost', 1)
         self.root.focus_force()
-        self.original_image = self.y.original_image
-        self.label = None
+        self.label = tk.Label().pack()
         self.selecting_coordinate(clicks)
+
     def selecting_coordinate(self, clicks):
         for i in range(6):
-            image = self.original_image.copy()
+            image = self.y.original_image.copy()
             if self.label:
                 self.label.destroy()
             if self.root.winfo_exists():
-                for key, loc in self.coordinate_data:
-                    image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
+                for key, loc in self.y.coordinate_data:
+                    image = cv2.rectangle(image, (loc[0], loc[1]), (loc[0] + 13 * len(self.y.coordinate_data[0][0]), loc[1] + 20), self.color, -1)
                     text_size, _ = cv2.getTextSize(key, cv2.FONT_HERSHEY_PLAIN, 0.75, 1)
-                    image = cv2.putText(image, key, (loc[0] + (10 * len(self.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
+                    image = cv2.putText(image, key, (loc[0] + (10 * len(self.y.coordinate_data[0][0]) - text_size[0]) // 2, loc[1] + (20 + text_size[1]) // 2), \
                         cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 _, buffer = cv2.imencode(".png", image)
-                with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
+                with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as temp_file:
                     temp_file.write(buffer.tobytes())
-                    image = tk.PhotoImage(file=temp_file.name)
+                    self.temp_name = temp_file.name
+                image = tk.PhotoImage(file=self.temp_name)
                 self.label = ttk.Label(self.root, image=image)
                 self.label.pack()
+                self.root.lift()
                 self.root.after(1, self.root.focus_force)
                 self.root.bind("<Key>", self.on_key)
+                self.root.grab_set()
                 self.root.mainloop()
-            if len(self.coordinate_data) == 1:
+            if len(self.y.coordinate_data) == 1:
                 self.root.destroy()
-                self.x.mouse([self.coordinate_data[0][1][0]+10, self.coordinate_data[0][1][1]+10], clicks=clicks)
+                self.y.x.mouse([self.y.coordinate_data[0][1][0]+10, self.y.coordinate_data[0][1][1]+10], clicks=clicks)
                 break
-            elif len(self.coordinate_data) == 0:
+            elif len(self.y.coordinate_data) == 0:
                 self.root.quit()
                 self.label.destroy()
                 style = ttk.Style()
@@ -190,7 +188,7 @@ class GUI:
 
     def on_key(self, event):
         self.input_char = event.char
-        self.coordinate_data = [(key[len(self.input_char):], p1) for key, p1 in self.coordinate_data if key[0].lower() == self.input_char.lower()]
+        self.y.coordinate_data = [(key[len(self.input_char):], p1) for key, p1 in self.y.coordinate_data if key[0].lower() == self.input_char.lower()]
         self.root.quit()
 
     def exit_app(self):
@@ -209,10 +207,26 @@ class GUI:
         r, g, b = rgb
         return f"#{r:02x}{g:02x}{b:02x}"
 
-def keyboard_main():
-    global z
-    z = GUI()
-    if len(sys.argv) == 0 and platform.system() == "Windows":
+class Usages:
+    args = None
+    platf = None
+    z = None
+
+    def __init__(self):
+        self.args = sys.argv
+        self.platf = platform.system()
+        self.z = GUI()
+        self.runType()
+
+    def runType(self):
+        if len(self.args) > 1:
+            self.commandline()
+        elif self.platf == "Windows":
+            self.shortcut()
+        else:
+            self.simple()
+
+    def shortcut(self):
         from pynput import keyboard
         start_combination = [
             {keyboard.Key.alt_l, keyboard.KeyCode(char='a')},
@@ -220,30 +234,13 @@ def keyboard_main():
         ]
         current = set()
         
-        global left_pressed, right_pressed
-        left_pressed = False
-        right_pressed = False
-
         def on_press(key):
-            global y, left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = True
-            elif key == keyboard.Key.alt_r:
-                right_pressed = True
             if any([key in COMBO for COMBO in start_combination]):
                 current.add(key)
                 if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    if left_pressed:
-                        z.run(clicks=1)
-                    elif right_pressed:
-                        z.run(clicks=2)
+                        self.z.run(clicks=1)
                         
         def on_release(key):
-            global left_pressed, right_pressed
-            if key == keyboard.Key.alt_l:
-                left_pressed = False
-            elif key == keyboard.Key.alt_r:
-                right_pressed = False
             if any([key in COMBO for COMBO in start_combination]):
                 try:
                     current.remove(key)
@@ -253,15 +250,20 @@ def keyboard_main():
         listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         listener.start()
 
-        while not z.exit_flag:
+        while not self.z.exit_flag:
             time.sleep(0.5)
         listener.stop()
-    else:
-        print("[Main] We could not use hotkeys.\n[Main] You can either run this script through your system hotkeys or terminal commands.")
-        z.run(clicks=1)
+    
+    def commandline(self):
+        print("[Usages] Using commandline keyflare.")
+        self.z.run(clicks=self.args[1])
+    
+    def simple(self):
+        print("[Usages] Using simple keyflare. [Potential error from incompatible operating system]")
+        self.z.run(clicks=self.args[1])
 
 def main():
-    keyboard_main()
+    Usages()
 
 if __name__ == "__main__":
     main()
