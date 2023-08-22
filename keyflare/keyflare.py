@@ -10,7 +10,6 @@ from rtree import index
 import pathlib
 import sys
 import tempfile
-import os
 import platform
 
 class System:
@@ -158,9 +157,14 @@ class GUI:
                 image = tk.PhotoImage(file=self.temp_name)
                 self.label = ttk.Label(self.root, image=image)
                 self.label.pack()
+                self.root.update_idletasks()
                 self.root.lift()
                 self.root.focus_force()
                 self.root.after(1, lambda: self.root.focus_force())
+                self.root.attributes('-topmost', True)
+                self.root.after_idle(self.root.attributes, '-topmost', False)
+                self.root.focus_force()
+                self.root.after(50, self.focus_window)
                 self.root.bind("<Key>", self.on_key)
                 self.root.grab_set()
                 self.root.mainloop()
@@ -208,10 +212,19 @@ class GUI:
         r, g, b = rgb
         return f"#{r:02x}{g:02x}{b:02x}"
 
+    def focus_window(self):
+        self.root.lift()
+        self.root.focus_force()
+        self.root.attributes('-topmost', True)
+        self.root.after_idle(self.root.attributes, '-topmost', False)
+        self.root.focus_force()
+
+
 class Usages:
     args = None
     platf = None
     z = None
+    clicks = 1
 
     def __init__(self):
         self.args = sys.argv
@@ -220,13 +233,8 @@ class Usages:
         self.runType()
 
     def runType(self):
-        if len(self.args) > 1:
-            self.commandline()
-        elif self.platf == "Windows":
-            self.shortcut()
-        else:
-            self.simple()
-
+        self.shortcut()
+        
     def shortcut(self):
         from pynput import keyboard
         start_combination = [
@@ -239,7 +247,8 @@ class Usages:
             if any([key in COMBO for COMBO in start_combination]):
                 current.add(key)
                 if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                        self.z.run(clicks=1)
+                    self.z.run(clicks=self.clicks)
+                    current.clear()
                         
         def on_release(key):
             if any([key in COMBO for COMBO in start_combination]):
@@ -251,17 +260,19 @@ class Usages:
         listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         listener.start()
 
-        while not self.z.exit_flag:
-            time.sleep(0.5)
-        listener.stop()
+        try:
+            while not self.z.exit_flag:
+                time.sleep(0.5)
+        except KeyboardInterrupt:
+            print("Exiting the application.")
+            listener.stop()
+        else:
+            listener.stop()
     
-    def commandline(self):
+    def programmatic(self):
         print("[Usages] Using commandline keyflare.")
-        self.z.run(clicks=self.args[1])
+        self.z.run(clicks=int(self.args[1]))
     
-    def simple(self):
-        print("[Usages] Using simple keyflare. [Potential error from incompatible operating system]")
-        self.z.run(clicks=self.args[1])
 
 def main():
     Usages()
