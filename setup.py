@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="KeyFlare",
-    version="1.0.3",
+    version="1.0.4",
     author="Pranit Shah",
     author_email="ppshah2023@gmail.com",
     description="Control your mouse with your keyboard through KeyFlare",

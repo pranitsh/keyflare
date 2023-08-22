@@ -35,4 +35,4 @@ Vimium C, a common tool for users with accessibility needs for navigating web br
 - Specifying the number of clicks desired through preferences.
 - Making it easier to use KeyFlare through imports by improving the documentation.
 
-**[Please fill out the survey](https://forms.gle/VtxPTN4WKMyU4uwV9)**
+**[Please fill out the survey](https://forms.gle/AVNGoHaFzGwHcsMz8)**
