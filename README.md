@@ -1,4 +1,3 @@
-[![Build KeyFlare executables](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml/badge.svg)](https://github.com/Pshah2023/keyflare/actions/workflows/main.yml)
 # KeyFlare 
 ## About
 Some users prefer using a keyboard over a mouse because of accessibility needs or personal reasons. KeyFlare enables users to interactively control their mouse using their keyboard.  Showcases available on my [website](https://www.pranitshah.cyou/keyflare). KeyFlare is open source, free, and both easy to understand and install.
