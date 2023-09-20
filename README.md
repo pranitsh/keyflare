@@ -13,7 +13,17 @@ pip install keyflare
 keyflare
 ```
 
-Alternatively:
+Alternative 1:
+```sh
+pip install -e git+https://github.com/Pshah2023/keyflare.git@main#egg=keyflare --upgrade
+```
+- The `@main` installs the main branch.
+- The `#egg=keyflare` makes sure to name the package keyflare
+- The `--upgrade` forces an update to the library if you had it installed already somehow through another package that depends on it or something else.
+- The `-e` means that the source code is installed too. The logging done when you run this line (normally the second line from the top) will show you where it is. You can then edit this source code for changes to propagate to the library. I do not often use this feature, but it is there for others if you want it.
+
+
+Alternative 2:
 - Use `git clone https://github.com/Pshah2023/keyflare.git` to install the source code
 - Optional: create a virtual environment with `python -m venv env` and activate it as per your system
 - Install dependencies: `pip install -r requirements.txt`
