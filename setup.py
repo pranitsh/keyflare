@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 def main():
     setup(
-        name="KeyFlare",
-        version="1.0.4",
+        name="keyflare",
+        version="1.1.2",
         author="Pranit Shah",
         author_email="ppshah2023@gmail.com",
         description="Control your mouse with your keyboard through KeyFlare",
         long_description=open("README.md").read(),
         long_description_content_type="text/markdown",
-        packages=find_packages(),
+        packages=find_packages(exclude=['tests*', 'test_*', '*tests*']),
         url="https://github.com/Pshah2023/keyflare",
         install_requires=[
             "numpy==1.24.3",

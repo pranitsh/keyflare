@@ -1,10 +1,4 @@
-import sys
-import os
-current_directory = os.path.dirname(__file__)
-sys.path.insert(0, current_directory)
-
-__package__ = 'keyflare'
-from .keyflare import Usages
+from .usages import Usages
 
 def main():
     Usages()
