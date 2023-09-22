@@ -1,4 +1,4 @@
-from keyflare import Usages
+from .usages import Usages
 
 def main():
     Usages()

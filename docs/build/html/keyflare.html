@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>keyflare package &#8212; KeyFlare 1.1.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=514cf933" />
+    
+    <script src="_static/documentation_options.js?v=6f037312"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">KeyFlare 1.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">keyflare package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="keyflare-package">
+<h1>keyflare package<a class="headerlink" href="#keyflare-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-keyflare.gui">
+<span id="keyflare-gui-module"></span><h2>keyflare.gui module<a class="headerlink" href="#module-keyflare.gui" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="keyflare.gui.GUI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">keyflare.gui.</span></span><span class="sig-name descname"><span class="pre">GUI</span></span><a class="headerlink" href="#keyflare.gui.GUI" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class named GUI (Graphical User Interface) serves as the primary interface for interacting with KeyFlare. It includes a coordinate selector, a keyboard input detector, color selector, etc. It continuously narrows down the location of your intended mouse click until it has been resolved, clicking automatically without a mouse.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>root (Tk object): The root Tk window for the KeyFlare application.
+input_char (str): The character input by the user.
+y (ImagePipeline object): An instance of the ImagePipeline class used for image processing and coordinate finding.
+exit_flag (bool): Flag to indicate whether to exit the application or not by the Usages class.
+color (tuple): The selected input method’s color represented in (R, G, B) format.
+label: A tk Label to be shown in the application.
+temp_name: Name of the temporary file.</p>
+</dd>
+<dt>Methods:</dt><dd><p>run(clicks: int): Runs KeyFlare’s GUI process for selecting a coordinate.
+selecting_coordinate(clicks: int): Manages the process of selecting a coordinate on the keyboard image.
+on_key(event): Filters and updates available key options on a keyboard input.
+exit_app(): Gracefully exits the KeyFlare application.
+select_color(): Opens a color selection dialog and updates the selected color in the GUI.
+rgb_to_hex(rgb: tuple): Converts an RGB color tuple to its hexadecimal representation.
+focus_window(): Sets the application window to the foreground and ensures it has focus.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.color">
+<span class="sig-name descname"><span class="pre">color</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(248,</span> <span class="pre">93,</span> <span class="pre">94)</span></em><a class="headerlink" href="#keyflare.gui.GUI.color" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.exit_app">
+<span class="sig-name descname"><span class="pre">exit_app</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.exit_app" title="Link to this definition">¶</a></dt>
+<dd><p>For exiting the KeyFlare application gracefully. It sets an exit flag and closes the application window.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">exit_app</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.exit_flag">
+<span class="sig-name descname"><span class="pre">exit_flag</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#keyflare.gui.GUI.exit_flag" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.focus_window">
+<span class="sig-name descname"><span class="pre">focus_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.focus_window" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the application window to the foreground and ensures it has focus, no matter what. It is against the purpose of the application to find you have to use your mouse to click the image shown.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">focus_window</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.input_char">
+<span class="sig-name descname"><span class="pre">input_char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#keyflare.gui.GUI.input_char" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.gui.GUI.label" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.on_key">
+<span class="sig-name descname"><span class="pre">on_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.on_key" title="Link to this definition">¶</a></dt>
+<dd><p>Filters and updates available key options on a keyboard input event. Narrows down the choices to find the spot to click.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>event (tkinter.Event): The keyboard event containing information about the pressed key.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Example:</dt><dd><p>To use this method, you can define it as an event handler for a tkinter window like this:
+&gt;&gt;&gt; self.root.bind(“&lt;Key&gt;”, self.on_key)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.rgb_to_hex">
+<span class="sig-name descname"><span class="pre">rgb_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.rgb_to_hex" title="Link to this definition">¶</a></dt>
+<dd><p>Converts an RGB color tuple to its hexadecimal representation.</p>
+<dl>
+<dt>Args:</dt><dd><p>rgb (tuple): A tuple containing three integers representing the red, green, and blue color channels, respectively.</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: The hexadecimal representation of the RGB color.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hex_color</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">rgb_to_hex</span><span class="p">(</span><span class="n">color_tuple</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">hex_color</span><span class="p">)</span>
+<span class="go">&quot;#FF0080&quot;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.root">
+<span class="sig-name descname"><span class="pre">root</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.gui.GUI.root" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clicks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.run" title="Link to this definition">¶</a></dt>
+<dd><p>Runs KeyFlare’s graphical user interface process for selecting a coordinate.</p>
+<dl>
+<dt>Args:</dt><dd><p>clicks (int, required): The number of mouse clicks to perform when a place to click has been found.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>Users can press a key on their physical keyboard, and the GUI will respond by narrowing down the available key options based on the input character.</p></li>
+<li><p>If no matching key is found, the GUI will display color selection options and allow the user to exit the application.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">clicks</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.select_color">
+<span class="sig-name descname"><span class="pre">select_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.select_color" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a color selection dialog and updates the selected color in the GUI. The selected color is then displayed in the GUI, and the RGB values are updated.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">select_color</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.selecting_coordinate">
+<span class="sig-name descname"><span class="pre">selecting_coordinate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clicks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.gui.GUI.selecting_coordinate" title="Link to this definition">¶</a></dt>
+<dd><p>Manages the process of selecting a coordinate on the keyboard image, clicking the point at the end or showing a preference menu at the end if no point was found.</p>
+<dl>
+<dt>Args:</dt><dd><p>clicks (int, required): The number of mouse clicks to perform when a place to click has been found.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span> <span class="o">=</span> <span class="n">GUI</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gui</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">clicks</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Notice: please do not run this by itself</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.temp_name">
+<span class="sig-name descname"><span class="pre">temp_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.gui.GUI.temp_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.gui.GUI.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;keyflare.image_pipeline.ImagePipeline</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#keyflare.gui.GUI.y" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-keyflare.image_pipeline">
+<span id="keyflare-image-pipeline-module"></span><h2>keyflare.image_pipeline module<a class="headerlink" href="#module-keyflare.image_pipeline" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">keyflare.image_pipeline.</span></span><span class="sig-name descname"><span class="pre">ImagePipeline</span></span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The <cite>ImagePipeline</cite> class performs a series of image processing tasks on a screenshot captured by the <cite>System</cite> class. It extracts coordinates of possibly clickable areas, removes overlapping bounding boxes, and labels the remaining boxes alphabetically. The processed data can then be used for various purposes, such as creating a graphical user interface (GUI) for navigating with your computer!</p>
+<dl>
+<dt>Attributes:</dt><dd><p>original_image (None): A placeholder for the original screenshot image.
+coordinate_data (list): A list to store coordinate data, including bounding boxes of clickable areas.
+x (System): An instance of the <cite>System</cite> class used for capturing screenshots.</p>
+</dd>
+<dt>Methods:</dt><dd><ul class="simple">
+<li><p>run(): Executes the image processing pipeline.</p></li>
+<li><p>processing_image(): Extracts contours from the original image into the coordinate_data.</p></li>
+<li><p>processing_data(): Processes coordinate data to remove overlapping boxes and label the remaining boxes, recycling coordinate_data.</p></li>
+</ul>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>The <cite>ImagePipeline</cite> class relies on the <cite>System</cite> class for capturing the original screenshot.</p></li>
+<li><p>The processed results can be accessed using the <cite>coordinate_data</cite> attribute.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">ImagePipeline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Executes the image processing pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coordinate_data</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">coordinate_data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinate_data</span><span class="p">))</span>  <span class="c1"># Output: Number of labeled bounding boxes</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.coordinate_data">
+<span class="sig-name descname"><span class="pre">coordinate_data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.coordinate_data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.old_collecting_data">
+<span class="sig-name descname"><span class="pre">old_collecting_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.old_collecting_data" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts data from an image using optical character recognition.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self (object): An instance of this method’s class “Identifier.”</p>
+</dd>
+<dt>Returns:</dt><dd><p>None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>None.</p>
+</dd>
+<dt>Notes:</dt><dd><p>The <cite>self.processed_image</cite> variable must be set to the input image. The extracted data is stored as a list of lists, where each inner list represents a region of interest following the format [left, top, right, bottom, confidence, text].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.old_processing_data">
+<span class="sig-name descname"><span class="pre">old_processing_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.old_processing_data" title="Link to this definition">¶</a></dt>
+<dd><p>Filters a list of text data chunks based on their properties into coordinate data.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self (object): An instance of this method’s class “Identifier.”</p>
+</dd>
+<dt>Returns:</dt><dd><p>None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>None.</p>
+</dd>
+<dt>Notes:</dt><dd><p>The <cite>self.data</cite> variable must be set to a list of data chunks before calling this method. Each data point should follow the format [left, top, width, height, confidence, and extracted text]. This method filters the data points based on their bounding boxes using the intersection over union (IoU) method. The <cite>self.data</cite> variable is updated to contain the filtered list. The <cite>self.coordinate_data</cite> variable is also updated to contain a dictionary that maps each chunk’s left and top coordinates to a unique alphabet string identifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.old_processing_image">
+<span class="sig-name descname"><span class="pre">old_processing_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.old_processing_image" title="Link to this definition">¶</a></dt>
+<dd><p>Performs image processing on an input .png image stored in a PIL Image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>self (object): An instance of this method’s class “Identifier.”</p>
+</dd>
+<dt>Returns:</dt><dd><p>None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>None.</p>
+</dd>
+<dt>Notes:</dt><dd><p>The processed image is stored in the <cite>self.processed_image</cite> variable, and the original image is converted to RGB format and stored in the <cite>self.original_image</cite> variable. The <cite>self.converted_image</cite> variable stores a copy of the converted image as a numpy array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.old_run">
+<span class="sig-name descname"><span class="pre">old_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.old_run" title="Link to this definition">¶</a></dt>
+<dd><p>The <cite>Identifier</cite> class’ initializer.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x (object, optional): An instance of the <cite>Main</cite> class. Defaults to None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>None.</p>
+</dd>
+<dt>Notes:</dt><dd><p>Initializes the <cite>Identifier</cite> class and its methods. This initializer automatically performs the usage pipeline.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.original_image">
+<span class="sig-name descname"><span class="pre">original_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.original_image" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.processing_data">
+<span class="sig-name descname"><span class="pre">processing_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.processing_data" title="Link to this definition">¶</a></dt>
+<dd><p>Process the coordinate data to remove overlapping boxes and label the remaining boxes.</p>
+<p>This method processes the coordinate data extracted from the image processing step. It includes the following steps:
+1. Index the coordinate_data, which technically holds bounding boxes before this step, into the R-tree spatial indexing algorithm.
+2. Remove overlapping bounding boxes.
+3. Labeling the remaining bounding boxes alphabetically.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>It uses the R-tree spatial index for efficient data manipulation.</p></li>
+<li><p>This method is a part of the image processing pipeline.</p></li>
+<li><p>The results are stored in the class’s <cite>coordinate_data</cite> attribute.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">ImagePipeline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Executes the image processing pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coordinate_data</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">coordinate_data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinate_data</span><span class="p">))</span>  <span class="c1"># Output: Number of labeled bounding boxes</span>
+</pre></div>
+</div>
+</dd>
+<dt>Further Improvements:</dt><dd><ul class="simple">
+<li><p>Currently, if an item is overlapping another bounding box by 10 pixels on any side of the box, it is added to a list to be removed. An adaptive method designed to get a specific number of boxes would work better.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.processing_image">
+<span class="sig-name descname"><span class="pre">processing_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.processing_image" title="Link to this definition">¶</a></dt>
+<dd><p>Processes the original image to extract contours into coordinate data. After converting an image from grey to black and white with adapative thresholding, the use of morpohological operations expands bright spots and contracts dark spots. The results, the contours of the image with and without morphological operations, are stored combined for further processing.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>This method is a part of the image processing pipeline.</p></li>
+<li><p>It uses OpenCV (cv2) functions for image manipulation.</p></li>
+<li><p>The results are stored in the class’s <cite>coordinate_data</cite>.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">ImagePipeline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Executes the image processing pipeline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original_contours</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">original_contours</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">processed_contours</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">processed_contours</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coordinate_data</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">coordinate_data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinate_data</span><span class="p">))</span>  <span class="c1"># Output: Number of extracted bounding boxes</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.run" title="Link to this definition">¶</a></dt>
+<dd><p>Executes the image processing pipeline. This method starts the image processing pipeline after taking a screenshot. The results are stored in the class as an attribute, which is then displayed through the GUI class.</p>
+<dl>
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>The method relies on the <cite>System</cite> class for capturing the original image.</p></li>
+<li><p>The processed results can be accessed using the class’s attributes.</p></li>
+</ul>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">ImagePipeline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coordinate_data</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">coordinate_data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coordinate_data</span><span class="p">))</span>  <span class="c1"># Output: Number of clickable places found</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.image_pipeline.ImagePipeline.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;keyflare.system.System</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#keyflare.image_pipeline.ImagePipeline.x" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-keyflare.system">
+<span id="keyflare-system-module"></span><h2>keyflare.system module<a class="headerlink" href="#module-keyflare.system" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="keyflare.system.System">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">keyflare.system.</span></span><span class="sig-name descname"><span class="pre">System</span></span><a class="headerlink" href="#keyflare.system.System" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class provides methods for capturing screenshots and simulating mouse actions.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>None</p>
+</dd>
+<dt>Methods:</dt><dd><ul class="simple">
+<li><p>image(): Take a screenshot.</p></li>
+<li><p>mouse(dataPoint, clicks): Move the mouse pointer to specified screen coordinates and perform the given number of mouse clicks.</p></li>
+</ul>
+</dd>
+<dt>Notes:</dt><dd><p>This class only uses the PyAutoGUI library for system interactions. Please refer
+to the README for KeyFlare the latest installation instructions and for bypassing any potential OS limitations for full compatibility.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">screenshot</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">image</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">screenshot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Output: (screen_height, screen_width, 3)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataPoint</span> <span class="o">=</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># Example screen coordinates</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">system</span><span class="o">.</span><span class="n">mouse</span><span class="p">(</span><span class="n">dataPoint</span><span class="p">)</span>  <span class="c1"># Performs a single left-click at (500, 300)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.system.System.image">
+<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.system.System.image" title="Link to this definition">¶</a></dt>
+<dd><p>Take a screenshot without your mouse in the image.</p>
+<dl>
+<dt>Returns:</dt><dd><p>np.ndarray: A NumPy array representing the screenshot image.</p>
+</dd>
+<dt>Notes:</dt><dd><p>This method uses the <cite>pyautogui.screenshot()</cite> function to capture a screenshot of the entire current screen.
+PyAutoGUI has a number of system requirements that differ depending on the OS. Please check the README for the latest installation instructions for KeyFlare.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">screenshot</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">image</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">screenshot</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Output: (screen_height, screen_width, 3)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.system.System.mouse">
+<span class="sig-name descname"><span class="pre">mouse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataPoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clicks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.system.System.mouse" title="Link to this definition">¶</a></dt>
+<dd><p>Moves the mouse pointer to a specified screen coordinate and then performs a number of clicks.</p>
+<dl>
+<dt>Args:</dt><dd><p>dataPoint (tuple or list, required): A tuple or list representing the target screen coordinates (x, y).
+clicks (int, required): The number of mouse clicks to perform.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><p>This method uses the <cite>pyautogui.moveTo()</cite> and <cite>pyautogui.click()</cite> functions to perform these mouse actions.
+Again, PyAutoGUI has a number of system requirements that differ depending on the OS. Please check the README for the latest installation instructions for KeyFlare.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataPoint</span> <span class="o">=</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># Example screen coordinates at 500 right and 300 down of the top-right corner of the screen.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">system</span><span class="o">.</span><span class="n">mouse</span><span class="p">(</span><span class="n">dataPoint</span><span class="p">)</span>  <span class="c1"># Performs a single left-click at (500, 300)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-keyflare.usages">
+<span id="keyflare-usages-module"></span><h2>keyflare.usages module<a class="headerlink" href="#module-keyflare.usages" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="keyflare.usages.Usages">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">keyflare.usages.</span></span><span class="sig-name descname"><span class="pre">Usages</span></span><a class="headerlink" href="#keyflare.usages.Usages" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class determines the way to use keyflare if called through main, whether it is __main__, main(), or maybe something else in the future.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>args (list): Command-line arguments passed to the program.
+platf (str): The platform (e.g., ‘Windows’, ‘Linux’, ‘Darwin’) on which the program is running.
+z (GUI): An instance of the GUI class.
+clicks (int, defaults to 1): The number of clicks to perform when a keyboard shortcut is triggered.</p>
+</dd>
+<dt>Methods:</dt><dd><p>__init__(): Initializes the Usages class and sets up necessary attributes.
+runType(): Calls the shortcut method to listen for keyboard shortcuts.
+shortcut(): Listens for specific keyboard shortcuts and triggers GUI actions accordingly.
+programmatic(): Executes GUI actions programmatically based on command-line arguments.</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>This class depends on the external library ‘pynput’ and standard library ‘platform’.</p></li>
+<li><p>It is designed to work with a GUI application represented by the ‘GUI’ class.</p></li>
+<li><p>The keyboard shortcuts are defined in the ‘start_combination’ list. The chosen shortcut is alt+A.</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">usage</span> <span class="o">=</span> <span class="n">Usages</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">usage</span><span class="o">.</span><span class="n">runType</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.args">
+<span class="sig-name descname"><span class="pre">args</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.usages.Usages.args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.clicks">
+<span class="sig-name descname"><span class="pre">clicks</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#keyflare.usages.Usages.clicks" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.platf">
+<span class="sig-name descname"><span class="pre">platf</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.usages.Usages.platf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.programmatic">
+<span class="sig-name descname"><span class="pre">programmatic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.usages.Usages.programmatic" title="Link to this definition">¶</a></dt>
+<dd><p>Executes GUI actions programmatically based on command-line arguments.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>This method is typically called from the command line with the desired number of clicks as an argument.</p></li>
+</ul>
+</dd>
+<dt>Examples:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`sh</span>
+<span class="pre">python</span> <span class="pre">script.py</span> <span class="pre">3</span>
+<span class="pre">`</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.runType">
+<span class="sig-name descname"><span class="pre">runType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.usages.Usages.runType" title="Link to this definition">¶</a></dt>
+<dd><p>Currently unimplemented. Always runs <cite>self.shortcut()</cite>. In the future, this will call the appropriate method.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.shortcut">
+<span class="sig-name descname"><span class="pre">shortcut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.usages.Usages.shortcut" title="Link to this definition">¶</a></dt>
+<dd><p>Listens for keyboard shortcuts and triggers the GUI action if the shortcut is pressed.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>This method relies on <cite>pynput</cite>, which has platform specific limitations. Please read the README for bypassing them.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="keyflare.usages.Usages.z">
+<span class="sig-name descname"><span class="pre">z</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#keyflare.usages.Usages.z" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.usages.main">
+<span class="sig-prename descclassname"><span class="pre">keyflare.usages.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.usages.main" title="Link to this definition">¶</a></dt>
+<dd><p>The main entry point of the script.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-keyflare.tests.test_image_pipeline">
+<span id="tests-test-image-pipeline-module"></span><h2>tests.test_image_pipeline module<a class="headerlink" href="#module-keyflare.tests.test_image_pipeline" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.tests.test_image_pipeline.test_image">
+<span class="sig-prename descclassname"><span class="pre">keyflare.tests.test_image_pipeline.</span></span><span class="sig-name descname"><span class="pre">test_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.tests.test_image_pipeline.test_image" title="Link to this definition">¶</a></dt>
+<dd><p>Fixture that loads a test image from a file for consistent testing.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>np.ndarray: The test image as a NumPy array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.tests.test_image_pipeline.test_image_pipeline">
+<span class="sig-prename descclassname"><span class="pre">keyflare.tests.test_image_pipeline.</span></span><span class="sig-name descname"><span class="pre">test_image_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.tests.test_image_pipeline.test_image_pipeline" title="Link to this definition">¶</a></dt>
+<dd><p>Benchmark test for improved ImagePipeline’s run method. It measures the time take to process the image and extract coordinates of clickable locations.</p>
+<dl class="simple">
+<dt>Assertions:</dt><dd><ul class="simple">
+<li><p>Ensures that coordinate_data is a list.</p></li>
+<li><p>Ensures that coordinate_data contains data.</p></li>
+<li><p>Ensures that each item in coordinate_data is a pair of (key, coordinates).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.tests.test_image_pipeline.test_old_image_pipeline">
+<span class="sig-prename descclassname"><span class="pre">keyflare.tests.test_image_pipeline.</span></span><span class="sig-name descname"><span class="pre">test_old_image_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.tests.test_image_pipeline.test_old_image_pipeline" title="Link to this definition">¶</a></dt>
+<dd><p>Benchmark test for my older ImagePipeline process that used tesseract.</p>
+<dl class="simple">
+<dt>Assertions:</dt><dd><ul class="simple">
+<li><p>Ensures that coordinate_data is a dict. I previously used a dicts</p></li>
+<li><p>Ensures that coordinate_data contains at least one coordinate.</p></li>
+<li><p>Ensures that each item in coordinate_data is a pair of (key, coordinates).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-keyflare.tests.test_system">
+<span id="keyflare-tests-test-system-module"></span><h2>keyflare.tests.test_system module<a class="headerlink" href="#module-keyflare.tests.test_system" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.tests.test_system.system_instance">
+<span class="sig-prename descclassname"><span class="pre">keyflare.tests.test_system.</span></span><span class="sig-name descname"><span class="pre">system_instance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.tests.test_system.system_instance" title="Link to this definition">¶</a></dt>
+<dd><p>Fixture; creates an instance of the System class.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>System: An instance of the System class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="keyflare.tests.test_system.test_capture_screenshot_benchmark">
+<span class="sig-prename descclassname"><span class="pre">keyflare.tests.test_system.</span></span><span class="sig-name descname"><span class="pre">test_capture_screenshot_benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benchmark</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keyflare.tests.test_system.test_capture_screenshot_benchmark" title="Link to this definition">¶</a></dt>
+<dd><p>Benchmark test for taking a screenshot and converting it a numpy.ndarray as part of System’s image() method.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>system_instance (System): An instance of the System class.
+benchmark: The benchmark fixture provided by pytest-benchmark.</p>
+</dd>
+<dt>Assertions:</dt><dd><ul class="simple">
+<li><p>Ensures that the captured screenshot is an instance of np.ndarray.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">keyflare package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-keyflare.gui">keyflare.gui module</a><ul>
+<li><a class="reference internal" href="#keyflare.gui.GUI"><code class="docutils literal notranslate"><span class="pre">GUI</span></code></a><ul>
+<li><a class="reference internal" href="#keyflare.gui.GUI.color"><code class="docutils literal notranslate"><span class="pre">GUI.color</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.exit_app"><code class="docutils literal notranslate"><span class="pre">GUI.exit_app()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.exit_flag"><code class="docutils literal notranslate"><span class="pre">GUI.exit_flag</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.focus_window"><code class="docutils literal notranslate"><span class="pre">GUI.focus_window()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.input_char"><code class="docutils literal notranslate"><span class="pre">GUI.input_char</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.label"><code class="docutils literal notranslate"><span class="pre">GUI.label</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.on_key"><code class="docutils literal notranslate"><span class="pre">GUI.on_key()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.rgb_to_hex"><code class="docutils literal notranslate"><span class="pre">GUI.rgb_to_hex()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.root"><code class="docutils literal notranslate"><span class="pre">GUI.root</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.run"><code class="docutils literal notranslate"><span class="pre">GUI.run()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.select_color"><code class="docutils literal notranslate"><span class="pre">GUI.select_color()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.selecting_coordinate"><code class="docutils literal notranslate"><span class="pre">GUI.selecting_coordinate()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.temp_name"><code class="docutils literal notranslate"><span class="pre">GUI.temp_name</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.gui.GUI.y"><code class="docutils literal notranslate"><span class="pre">GUI.y</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-keyflare.image_pipeline">keyflare.image_pipeline module</a><ul>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline"><code class="docutils literal notranslate"><span class="pre">ImagePipeline</span></code></a><ul>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.coordinate_data"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.coordinate_data</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.old_collecting_data"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.old_collecting_data()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.old_processing_data"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.old_processing_data()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.old_processing_image"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.old_processing_image()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.old_run"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.old_run()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.original_image"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.original_image</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.processing_data"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.processing_data()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.processing_image"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.processing_image()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.run"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.run()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.image_pipeline.ImagePipeline.x"><code class="docutils literal notranslate"><span class="pre">ImagePipeline.x</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-keyflare.system">keyflare.system module</a><ul>
+<li><a class="reference internal" href="#keyflare.system.System"><code class="docutils literal notranslate"><span class="pre">System</span></code></a><ul>
+<li><a class="reference internal" href="#keyflare.system.System.image"><code class="docutils literal notranslate"><span class="pre">System.image()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.system.System.mouse"><code class="docutils literal notranslate"><span class="pre">System.mouse()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-keyflare.usages">keyflare.usages module</a><ul>
+<li><a class="reference internal" href="#keyflare.usages.Usages"><code class="docutils literal notranslate"><span class="pre">Usages</span></code></a><ul>
+<li><a class="reference internal" href="#keyflare.usages.Usages.args"><code class="docutils literal notranslate"><span class="pre">Usages.args</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.clicks"><code class="docutils literal notranslate"><span class="pre">Usages.clicks</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.platf"><code class="docutils literal notranslate"><span class="pre">Usages.platf</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.programmatic"><code class="docutils literal notranslate"><span class="pre">Usages.programmatic()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.runType"><code class="docutils literal notranslate"><span class="pre">Usages.runType()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.shortcut"><code class="docutils literal notranslate"><span class="pre">Usages.shortcut()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.usages.Usages.z"><code class="docutils literal notranslate"><span class="pre">Usages.z</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#keyflare.usages.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-keyflare.tests.test_image_pipeline">tests.test_image_pipeline module</a><ul>
+<li><a class="reference internal" href="#keyflare.tests.test_image_pipeline.test_image"><code class="docutils literal notranslate"><span class="pre">test_image()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.tests.test_image_pipeline.test_image_pipeline"><code class="docutils literal notranslate"><span class="pre">test_image_pipeline()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.tests.test_image_pipeline.test_old_image_pipeline"><code class="docutils literal notranslate"><span class="pre">test_old_image_pipeline()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-keyflare.tests.test_system">keyflare.tests.test_system module</a><ul>
+<li><a class="reference internal" href="#keyflare.tests.test_system.system_instance"><code class="docutils literal notranslate"><span class="pre">system_instance()</span></code></a></li>
+<li><a class="reference internal" href="#keyflare.tests.test_system.test_capture_screenshot_benchmark"><code class="docutils literal notranslate"><span class="pre">test_capture_screenshot_benchmark()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/keyflare.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">KeyFlare 1.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">keyflare package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Pranit Shah.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+  </body>
+</html>

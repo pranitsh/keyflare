@@ -1,0 +1,53 @@
+keyflare package
+================
+
+Submodules
+----------
+
+keyflare.gui module
+------------------------
+
+.. automodule:: keyflare.gui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+keyflare.image_pipeline module
+-------------------------------
+
+.. automodule:: keyflare.image_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+keyflare.system module
+------------------------
+
+.. automodule:: keyflare.system
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+keyflare.usages module
+------------------------
+
+.. automodule:: keyflare.usages
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+tests.test_image_pipeline module
+-------------------------------------------
+
+.. automodule:: keyflare.tests.test_image_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+keyflare.tests.test_system module
+-------------------------------------------
+
+.. automodule:: keyflare.tests.test_system
+   :members:
+   :undoc-members:
+   :show-inheritance:
