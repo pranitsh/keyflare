@@ -1,3 +1,7 @@
+import sys
+parent_dir = r'C:\Users\ppsha\Documents\Github\keyflare'
+sys.path.insert(0, parent_dir)
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -9,7 +13,7 @@
 project = 'KeyFlare'
 copyright = '2023, Pranit Shah'
 author = 'Pranit Shah'
-release = '1.0.5'
+release = '1.1.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -24,10 +28,5 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'classic'
 html_static_path = ['_static']
-
-import sys
-
-code_dir = r'C:\Users\ppsha\Documents\Github\keyflare'
-sys.path.insert(0, code_dir)

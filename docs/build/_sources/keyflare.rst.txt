@@ -39,7 +39,7 @@ keyflare.usages module
 tests.test_image_pipeline module
 -------------------------------------------
 
-.. automodule:: keyflare.tests.test_image_pipeline
+.. automodule:: tests.test_image_pipeline
    :members:
    :undoc-members:
    :show-inheritance:
@@ -47,7 +47,7 @@ tests.test_image_pipeline module
 keyflare.tests.test_system module
 -------------------------------------------
 
-.. automodule:: keyflare.tests.test_system
+.. automodule:: tests.test_system
    :members:
    :undoc-members:
    :show-inheritance:
