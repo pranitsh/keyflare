@@ -1,10 +1,14 @@
+# pylint: disable=redefined-outer-name
+"""Tests the system class to ensure a high efficiency for every photo taken."""
 import os
 import pytest
 import numpy as np
 from ..system import System
-import time
 
-test_image_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "images", "test.jpg")
+test_image_path = os.path.join(
+    os.path.dirname(__file__), "..", "..", "..", "images", "test.jpg"
+)
+
 
 @pytest.fixture(scope="module")
 def system_instance():
@@ -17,10 +21,11 @@ def system_instance():
     system = System()
     return system
 
+
 @pytest.mark.benchmark(min_rounds=10)
 def test_capture_screenshot_benchmark(system_instance, benchmark):
     """
-    Benchmark test for taking a screenshot and converting it a numpy.ndarray as part of System's image() method.
+    Benchmark test for taking a screenshot and returning a numpy.ndarray in System's image() method.
 
     Args:
         system_instance (System): An instance of the System class.
@@ -29,11 +34,13 @@ def test_capture_screenshot_benchmark(system_instance, benchmark):
     Assertions:
         - Ensures that the captured screenshot is an instance of np.ndarray.
     """
+
     def capture_screenshot():
         return system_instance.image()
 
     result = benchmark(capture_screenshot)
     assert isinstance(result, np.ndarray)
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

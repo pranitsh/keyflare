@@ -21,3 +21,5 @@ pip install setuptools wheel twine
 python setup.py sdist bdist_wheel
 twine upload dist/*
 ```
+
+The current pylint score is 9.22. In pull requests, improvements to this score is appreciated.

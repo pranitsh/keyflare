@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 
+
 def main():
     setup(
         name="keyflare",
@@ -9,7 +10,7 @@ def main():
         description="Control your mouse with your keyboard through KeyFlare",
         long_description=open("README.md").read(),
         long_description_content_type="text/markdown",
-        packages=find_packages(exclude=['tests*', 'test_*', '*tests*']),
+        packages=find_packages(exclude=["tests*", "test_*", "*tests*"]),
         url="https://github.com/Pshah2023/keyflare",
         install_requires=[
             "numpy==1.24.3",
@@ -19,7 +20,7 @@ def main():
             "pynput==1.7.6",
             "pyperclip==1.8.2",
             "pyscreenshot==3.1",
-            "Rtree==1.0.1"
+            "Rtree==1.0.1",
         ],
         license="MIT",
         classifiers=[
@@ -28,14 +29,15 @@ def main():
             "License :: OSI Approved :: MIT License",
             "Programming Language :: Python :: 3",
             "Topic :: Software Development :: Libraries :: Python Modules",
-            "Topic :: Utilities"
+            "Topic :: Utilities",
         ],
         entry_points={
-            'console_scripts': [
-                'keyflare=keyflare.__main__:main',
+            "console_scripts": [
+                "keyflare=keyflare.__main__:main",
             ],
         },
     )
+
 
 if __name__ == "__main__":
     main()
