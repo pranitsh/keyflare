@@ -4,8 +4,12 @@ import re
 import numpy as np
 import cv2
 from rtree import index
-import pytesseract
 from .system import System
+try:
+    import pytesseract
+except ImportError:
+    pass
+
 
 
 class ImagePipeline:

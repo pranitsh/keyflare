@@ -8,7 +8,6 @@ try:
     from pynput import keyboard
 except ImportError:
     import logger
-
     logger.info("Could not create shortcuts.")
 
 
@@ -74,6 +73,7 @@ class Usages:
         Returns:
             None
         """
+        print("[KeyFlare] Press (left Alt)+(lowercase a) to activate.")
         self.shortcut()
 
     def shortcut(self):
