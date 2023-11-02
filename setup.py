@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 def main():
     setup(
         name="keyflare",
-        version="1.1.2",
+        version="1.1.3",
         author="Pranit Shah",
         author_email="ppshah2023@gmail.com",
         description="Control your mouse with your keyboard through KeyFlare",
@@ -22,13 +22,14 @@ def main():
             "pyscreenshot==3.1",
             "Rtree==1.0.1",
         ],
-        extra_requires={
+        extras_require={
             "dev": [
                 "pytesseract==0.3.1",
                 "twine==4.0.2",
                 "wheel==0.41.3",
                 "pytest==7.4.2",
-                "pytest-benchmark==4.0.0"
+                "pytest-benchmark==4.0.0",
+                "setuptools==68.2.2",
             ]
         },
         license="MIT",
