@@ -22,6 +22,15 @@ def main():
             "pyscreenshot==3.1",
             "Rtree==1.0.1",
         ],
+        extra_requires={
+            "dev": [
+                "pytesseract==0.3.1",
+                "twine==4.0.2",
+                "wheel==0.41.3",
+                "pytest==7.4.2",
+                "pytest-benchmark==4.0.0"
+            ]
+        },
         license="MIT",
         classifiers=[
             "Development Status :: 5 - Production/Stable",

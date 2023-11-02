@@ -1,5 +1,6 @@
 ## Repo specifc
 ***/.benchmarks
+dist/
 
 ### Template .gitignore from github for Python
 
