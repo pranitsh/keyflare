@@ -117,24 +117,33 @@ class ImagePipeline:
             >>> coordinate_data = pipeline.coordinate_data
             >>> print(len(coordinate_data))  # Output: Number of extracted bounding boxes
         """
-        gray = cv2.cvtColor(self.original_image, cv2.COLOR_RGB2GRAY)
-        threshold = cv2.adaptiveThreshold(
-            gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
-        )
-        original_contours, _ = cv2.findContours(
-            threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-        )
-        kernel = np.ones((1, 4), np.uint8)
-        dilated = cv2.dilate(threshold, kernel, iterations=1)
-        processed_contours, _ = cv2.findContours(
-            dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-        )
-        for cnt in processed_contours:
-            x, y, w, h = cv2.boundingRect(cnt)
-            self.coordinate_data.append([x, y, w, h])
-        for cnt in original_contours:
-            x, y, w, h = cv2.boundingRect(cnt)
-            self.coordinate_data.append([x, y, w, h])
+        bsplit, gsplit, rsplit = cv2.split(self.original_image)
+        red = cv2.merge([bsplit*0, gsplit*0, rsplit])
+        green = cv2.merge([bsplit*0, gsplit, rsplit*0])
+        blue = cv2.merge([bsplit, gsplit*0, rsplit*0])
+        gray_red = cv2.cvtColor(red, cv2.COLOR_RGB2GRAY)
+        gray_green = cv2.cvtColor(green, cv2.COLOR_RGB2GRAY)
+        gray_blue = cv2.cvtColor(blue, cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
+        equalized = cv2.equalizeHist(gray)
+        for image in [gray_red, gray_green, gray_blue, equalized]:
+            threshold = cv2.adaptiveThreshold(
+                image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
+            )
+            original_contours, _ = cv2.findContours(
+                threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
+            kernel = np.ones((1, 1), np.uint8)
+            dilated = cv2.dilate(threshold, kernel, iterations=1)
+            processed_contours, _ = cv2.findContours(
+                dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
+            for cnt in processed_contours:
+                x, y, w, h = cv2.boundingRect(cnt)
+                self.coordinate_data.append([x, y, w, h])
+            for cnt in original_contours:
+                x, y, w, h = cv2.boundingRect(cnt)
+                self.coordinate_data.append([x, y, w, h])
 
     def processing_data(self):
         """

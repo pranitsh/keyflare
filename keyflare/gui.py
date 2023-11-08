@@ -122,6 +122,8 @@ class GUI:
                         1,
                         cv2.LINE_AA,
                     )
+                alpha = 0.75
+                image = cv2.addWeighted(image, alpha, self.y.original_image.copy(), 1 - alpha, 0)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 _, buffer = cv2.imencode(".png", image)
                 with tempfile.NamedTemporaryFile(

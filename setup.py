@@ -1,14 +1,16 @@
+"""Setup.py for pip installation"""
+import pathlib
 from setuptools import setup, find_packages
 
-
 def main():
+    """Performs the setup"""
     setup(
         name="keyflare",
         version="1.1.3",
         author="Pranit Shah",
         author_email="ppshah2023@gmail.com",
         description="Control your mouse with your keyboard through KeyFlare",
-        long_description=open("README.md").read(),
+        long_description=pathlib.Path("README.md").read_text(encoding="utf8"),
         long_description_content_type="text/markdown",
         packages=find_packages(exclude=["tests*", "test_*", "*tests*"]),
         url="https://github.com/Pshah2023/keyflare",
@@ -21,6 +23,7 @@ def main():
             "pyperclip==1.8.2",
             "pyscreenshot==3.1",
             "Rtree==1.0.1",
+            "numpy==1.24.3"
         ],
         extras_require={
             "dev": [
