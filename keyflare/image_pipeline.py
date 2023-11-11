@@ -126,14 +126,14 @@ class ImagePipeline:
         gray_blue = cv2.cvtColor(blue, cv2.COLOR_RGB2GRAY)
         gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
         equalized = cv2.equalizeHist(gray)
-        for image in [gray_red, gray_green, gray_blue, equalized]:
+        for image in [gray_red, gray_green, gray_blue, gray, equalized]:
             threshold = cv2.adaptiveThreshold(
                 image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
             )
             original_contours, _ = cv2.findContours(
                 threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
             )
-            kernel = np.ones((1, 1), np.uint8)
+            kernel = np.ones((1, 2), np.uint8)
             dilated = cv2.dilate(threshold, kernel, iterations=1)
             processed_contours, _ = cv2.findContours(
                 dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
