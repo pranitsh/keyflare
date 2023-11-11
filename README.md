@@ -1,4 +1,8 @@
-# KeyFlare 
+# KeyFlare
+[![Downloads](https://static.pepy.tech/badge/keyflare)](https://pepy.tech/project/keyflare)
+[![Website](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)](https://www.pranitshah.cyou/keyflare)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 ## About
 Some users prefer using a keyboard over a mouse because of accessibility needs or personal reasons. KeyFlare enables users to interactively control their mouse using their keyboard.  Showcases available on my [website](https://www.pranitshah.cyou/keyflare). KeyFlare is open source, free, and both easy to understand and install.
 
