@@ -45,7 +45,7 @@ class GUI:
     label = None
     temp_name = None
 
-    def run(self, clicks):
+    def run(self, clicks, button):
         """
         Runs KeyFlare's graphical user interface process for selecting a coordinate.
 
@@ -74,9 +74,9 @@ class GUI:
         self.root.attributes("-topmost", 1)
         self.root.focus_force()
         self.label = tk.Label().pack()
-        self.selecting_coordinate(clicks)
+        self.selecting_coordinate(clicks, button)
 
-    def selecting_coordinate(self, clicks):
+    def selecting_coordinate(self, clicks, button):
         """
         Manages the process of selecting a coordinate on
         the keyboard image, clicking the point at the end
@@ -122,8 +122,9 @@ class GUI:
                         1,
                         cv2.LINE_AA,
                     )
-                alpha = 0.75
-                image = cv2.addWeighted(image, alpha, self.y.original_image.copy(), 1 - alpha, 0)
+                image = cv2.addWeighted(
+                    image, 0.75, self.y.original_image.copy(), 1 - 0.75, 0
+                )
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 _, buffer = cv2.imencode(".png", image)
                 with tempfile.NamedTemporaryFile(
@@ -137,7 +138,7 @@ class GUI:
                 self.root.update_idletasks()
                 self.root.lift()
                 self.root.focus_force()
-                self.root.after(1, lambda: self.root.focus_force())
+                self.root.after(1, self.root.focus_force())
                 self.root.attributes("-topmost", True)
                 self.root.after_idle(self.root.attributes, "-topmost", False)
                 self.root.focus_force()
@@ -153,6 +154,7 @@ class GUI:
                         self.y.coordinate_data[0][1][1] + 10,
                     ],
                     clicks=clicks,
+                    button=button,
                 )
                 break
             if len(self.y.coordinate_data) == 0:

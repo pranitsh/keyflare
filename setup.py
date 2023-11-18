@@ -2,11 +2,12 @@
 import pathlib
 from setuptools import setup, find_packages
 
+
 def main():
     """Performs the setup"""
     setup(
         name="keyflare",
-        version="1.1.3",
+        version="1.2.0",
         author="Pranit Shah",
         author_email="ppshah2023@gmail.com",
         description="Control your mouse with your keyboard through KeyFlare",
@@ -15,7 +16,7 @@ def main():
         packages=find_packages(exclude=["tests*", "test_*", "*tests*"]),
         url="https://github.com/Pshah2023/keyflare",
         install_requires=[
-            "numpy==1.24.3",
+            "numpy>=1.23",
             "opencv-python==4.7.0.72",
             "Pillow==9.5.0",
             "PyAutoGUI==0.9.54",
@@ -23,7 +24,7 @@ def main():
             "pyperclip==1.8.2",
             "pyscreenshot==3.1",
             "Rtree==1.0.1",
-            "numpy==1.24.3"
+            "numpy==1.24.3",
         ],
         extras_require={
             "dev": [
@@ -33,6 +34,8 @@ def main():
                 "pytest==7.4.2",
                 "pytest-benchmark==4.0.0",
                 "setuptools==68.2.2",
+                "black==23.11.0",
+                "pylint==3.0.2"
             ]
         },
         license="MIT",

@@ -8,6 +8,7 @@ try:
     from pynput import keyboard
 except ImportError:
     import logger
+
     logger.info("Could not create shortcuts.")
 
 
@@ -64,17 +65,22 @@ class Usages:
 
     def runtype(self):
         """
-        Currently unimplemented. Always runs `self.shortcut()`.
-        In the future, this will call the appropriate method.
+        Uses the number of args to determine how to run.
 
         Args:
             None
 
         Returns:
             None
+
+        Note:
+            If there are multiple args, uses programmatic control.
+            If there are no args, uses keyboard shortcuts to activate.s
         """
-        print("[KeyFlare] Press (left Alt)+(lowercase a) to activate.")
-        self.shortcut()
+        if len(self.args) > 1:
+            self.programmatic()
+        else:
+            self.shortcut()
 
     def shortcut(self):
         """
@@ -90,18 +96,26 @@ class Usages:
             - This method relies on `pynput`, which has platform
               specific limitations. Please read the README for bypassing them.
         """
+        print("[KeyFlare] Press (left Alt)+(lowercase a) to activate.")
+        print("[KeyFlare] Perform a keyboard interrupt to exit.")
         start_combination = [
+            {keyboard.Key.alt, keyboard.KeyCode(char="a")},
             {keyboard.Key.alt_l, keyboard.KeyCode(char="a")},
-            {keyboard.Key.alt_r, keyboard.KeyCode(char="a")},
+            {keyboard.Key.alt, keyboard.KeyCode(char="s")},
+            {keyboard.Key.alt_l, keyboard.KeyCode(char="s")},
         ]
         current = set()
 
         def on_press(key):
             if any([key in COMBO for COMBO in start_combination]):
                 current.add(key)
-                if any(all(k in current for k in COMBO) for COMBO in start_combination):
-                    self.z.run(clicks=self.clicks)
-                    current.clear()
+                if len(current) == 2:
+                    if keyboard.KeyCode(char="s") in current:
+                        self.z.run(clicks=self.clicks, button="right")
+                        current.clear()
+                    else:
+                        self.z.run(clicks=self.clicks, button="left")
+                        current.clear()
 
         def on_release(key):
             if any([key in COMBO for COMBO in start_combination]):
@@ -134,15 +148,15 @@ class Usages:
 
         Notes:
             - This method is typically called from the command
-              line with the desired number of clicks as an argument.
+              line with the desired number of clicks and the button as the argument.
 
         Examples:
             ```sh
-            python script.py 3
+            keyflare 3 left
             ```
         """
         print("[Usages] Using commandline keyflare.")
-        self.z.run(clicks=int(self.args[1]))
+        self.z.run(clicks=int(self.args[1]), button=str(self.args[2]))
 
 
 def main():

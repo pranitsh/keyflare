@@ -9,6 +9,7 @@ Some users prefer using a keyboard over a mouse because of accessibility needs o
 Also, please check the documentation in [github wiki](https://github.com/pranitsh/keyflare/wiki)!
 
 ![An example image of KeyFlare in action](images/Screenshot.jpg)
+Also used for testing and benchmarking.
 
 ## Installation
 
@@ -30,7 +31,7 @@ pip install -e git+https://github.com/pranitsh/keyflare.git@main#egg=keyflare --
 ```sh
 pip install -e "git+https://github.com/pranitsh/keyflare.git@main#egg=keyflare[dev]" --upgrade
 ```
-- Add the quotation marks and the `[dev]` for the developer toolkit to come with it (including pytest, wheel, etc)
+- Add the quotation marks and the `[dev]` for the developer toolkit to come with it (including pytest, wheel, black, etc)
 
 
 Alternative 2:
@@ -49,7 +50,7 @@ Vimium C, a common tool for users with accessibility needs for navigating web br
 
 ### Features
 
-- Intuitive Hotkey: (Left Alt) + (Lowercase A)
+- Intuitive Hotkey: (Left alt) + (Lowercase a) for left click and (Left alt) + (Lowercase s) for right click
 - Intuitive Process: KeyFlare simply opens up a fullscreen image to show you the options on the screen.
 - Enhanced image segmentation algorithm that optimizes speed.
 - Cross-platform compatibility with Linux, macOS, and Windows. (Untested on macOS since I do not have access to that environment at the moment.)

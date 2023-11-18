@@ -5,11 +5,11 @@ import numpy as np
 import cv2
 from rtree import index
 from .system import System
+
 try:
     import pytesseract
 except ImportError:
     pass
-
 
 
 class ImagePipeline:
@@ -59,7 +59,6 @@ class ImagePipeline:
         self.processed_image = None
         self.collecting_data = None
 
-
     def run(self):
         """
         Executes the image processing pipeline. This method
@@ -68,7 +67,7 @@ class ImagePipeline:
         which is then displayed through the GUI class.
 
         Args:
-            None
+            slow
 
         Returns:
             None
@@ -88,7 +87,7 @@ class ImagePipeline:
         self.processing_image()
         self.processing_data()
 
-    def processing_image(self):
+    def processing_image(self, slow=False):
         """
         Processes the original image to extract contours into
         coordinate data. After converting an image from grey to
@@ -99,7 +98,7 @@ class ImagePipeline:
         are stored combined for further processing.
 
         Args:
-            None
+            slow (bool): Increases the number and variety of images to process
 
         Returns:
             None
@@ -117,16 +116,19 @@ class ImagePipeline:
             >>> coordinate_data = pipeline.coordinate_data
             >>> print(len(coordinate_data))  # Output: Number of extracted bounding boxes
         """
-        bsplit, gsplit, rsplit = cv2.split(self.original_image)
-        red = cv2.merge([bsplit*0, gsplit*0, rsplit])
-        green = cv2.merge([bsplit*0, gsplit, rsplit*0])
-        blue = cv2.merge([bsplit, gsplit*0, rsplit*0])
-        gray_red = cv2.cvtColor(red, cv2.COLOR_RGB2GRAY)
-        gray_green = cv2.cvtColor(green, cv2.COLOR_RGB2GRAY)
-        gray_blue = cv2.cvtColor(blue, cv2.COLOR_RGB2GRAY)
         gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
-        equalized = cv2.equalizeHist(gray)
-        for image in [gray_red, gray_green, gray_blue, gray, equalized]:
+        images = [gray]
+        if slow:
+            bsplit, gsplit, rsplit = cv2.split(self.original_image)
+            red = cv2.merge([bsplit * 0, gsplit * 0, rsplit])
+            green = cv2.merge([bsplit * 0, gsplit, rsplit * 0])
+            blue = cv2.merge([bsplit, gsplit * 0, rsplit * 0])
+            gray_red = cv2.cvtColor(red, cv2.COLOR_RGB2GRAY)
+            gray_green = cv2.cvtColor(green, cv2.COLOR_RGB2GRAY)
+            gray_blue = cv2.cvtColor(blue, cv2.COLOR_RGB2GRAY)
+            equalized = cv2.equalizeHist(gray)
+            images += [gray_red, gray_green, gray_blue, equalized]
+        for image in images:
             threshold = cv2.adaptiveThreshold(
                 image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2
             )
@@ -202,7 +204,9 @@ class ImagePipeline:
                         data_point[1] + data_point[3],
                     ),
                 )
-        for i in rt.intersection((float("-inf"), float("-inf"), float("inf"), float("inf"))):
+        for i in rt.intersection(
+            (float("-inf"), float("-inf"), float("inf"), float("inf"))
+        ):
             if i not in boxes_to_remove:
                 intersectingindices = list(
                     rt.intersection(
@@ -338,9 +342,9 @@ class ImagePipeline:
             stored as a list of lists, where each inner list represents
             a region of interest following the
             format [left, top, right, bottom, confidence, text].
-            The data follows the format 
+            The data follows the format
                 [ 0 'level', 1 'page_num', 2 'block_num', 3 'par_num', 4 'line_num',
-                5 'word_num', 6 'left', 7 'top', 8 'width', 
+                5 'word_num', 6 'left', 7 'top', 8 'width',
                 9 'height', 10 'conf', 11 'text']
         """
         unprocesseddata = pytesseract.image_to_data(self.processed_image, lang="eng")
@@ -380,12 +384,12 @@ class ImagePipeline:
             None.
 
         Notes:
-            The `self.data` variable must be set to a list of data 
+            The `self.data` variable must be set to a list of data
             chunks before calling this method. Each data point should
             follow the format [left, top, width, height, confidence, and extracted text].
-            This method filters the data points based on their bounding 
-            boxes using the intersection over union (IoU) method. 
-            The `self.data` variable is updated to contain the filtered list. 
+            This method filters the data points based on their bounding
+            boxes using the intersection over union (IoU) method.
+            The `self.data` variable is updated to contain the filtered list.
             The `self.coordinate_data` variable is also updated to contain a
             dictionary that maps each chunk's left and top coordinates to a
             unique alphabet string identifier.
@@ -425,7 +429,9 @@ class ImagePipeline:
                     ),
                 )
             allitems = []
-            for item in rt.intersection((float("-inf"), float("-inf"), float("inf"), float("inf"))):
+            for item in rt.intersection(
+                (float("-inf"), float("-inf"), float("inf"), float("inf"))
+            ):
                 allitems.append(data_points[item])
             return allitems
 
