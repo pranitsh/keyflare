@@ -16,7 +16,6 @@ def main():
         packages=find_packages(exclude=["tests*", "test_*", "*tests*"]),
         url="https://github.com/Pshah2023/keyflare",
         install_requires=[
-            "numpy>=1.23",
             "opencv-python==4.7.0.72",
             "Pillow==9.5.0",
             "PyAutoGUI==0.9.54",
