@@ -9,7 +9,7 @@ Some users prefer using a keyboard over a mouse because of accessibility needs o
 Also, please check the documentation in [github wiki](https://github.com/pranitsh/keyflare/wiki)!
 
 ![An example image of KeyFlare in action](images/Screenshot.jpg)
-Also used for testing and benchmarking.
+This image is used for testing and benchmarking.
 
 ## Installation
 
@@ -18,6 +18,8 @@ Suggested:
 pip install keyflare
 keyflare
 ```
+
+**Both alternatives require git**
 
 Alternative 1:
 ```sh
@@ -39,6 +41,8 @@ Alternative 2:
 - Optional: create a virtual environment with `python -m venv env` and activate it as per your system
 - Install dependencies: `pip install -r requirements.txt`
 - Go to the KeyFlare root directory and run `python keyflare`, which will run the code in `__main__.py` automatically.
+
+### Compatibility
 
 For macOS, both PyAutoGUI (which takes screenshots and moves the mouse) and pynput (which monitors keyboard for hotkey) do claim compatibility with macOS. However, there are some macOS-specific hoops you should be aware of:
 - pynput requires `sudo keyflare` and on macOS versions post-Mojave, you may need to whitelist your terminal application
